@@ -27,6 +27,7 @@ make
 
 - Run the example (from the root directory `realm-dart-ffi`)
 ```
+realm-dart-ffi> pub get
 realm-dart-ffi> pub run example/main
 ```
 
