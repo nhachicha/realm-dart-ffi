@@ -1,34 +1,51 @@
+import 'package:realm/src/dart/bindings/types.dart';
+import 'package:realm/src/dart/realmmodel.dart';
+import 'package:realm/src/dart/realmconfiguration.dart';
+
 import "bindings/bindings.dart";
-import "bindings/types.dart";
 import "ffi/cstring.dart";
 
 class Database {
-  DatabasePointer _database;
+  RealmConfiguration realmConfiguration; // to be injected with the one generated at compile time
+  DatabasePointer _databasePointer;
 
-  Database(String path) {
-    CString pathC = CString.allocate(path);
-    _database = bindings.wrapper_create(pathC);
-    pathC.free();
-  }
+  Future<void> open() async {
+    CString pathC = CString.allocate(realmConfiguration.path());
+    CString schemaC = CString.allocate(realmConfiguration.getSchemaAsJSON());
 
-  void close() {
-    bindings.wrapper_destroy(_database);
-  }
-
-  void put(String key, String value) {
-    CString keyC = CString.allocate(key);
-    CString valueC = CString.allocate(value);
+    _databasePointer = bindings.wrapper_create(pathC, schemaC);
     
-    bindings.wrapper_put(_database, keyC, valueC);
-
-    keyC.free();
-    valueC.free();
+    pathC.free();
+    schemaC.free();
   }
 
-  String get(String key) {
-    CString keyC = CString.allocate(key);
-    String value = CString.fromUtf8(bindings.wrapper_get(_database, keyC));
-    keyC.free();
-    return value;
+  Future<void> close() async {
+    bindings.wrapper_destroy(_databasePointer);
   }
+
+  Future<void> beginTransaction() async {
+    bindings.wrapper_begin_transaction(_databasePointer);
+  }
+
+  Future<void> commitTransaction() async {
+    bindings.wrapper_commit_transaction(_databasePointer);
+  }
+
+  Future<void> cancelTransaction() async {
+    bindings.wrapper_cancel_transaction(_databasePointer);
+  }
+
+  Future<T> create<T extends RealmModel>(T obj) async {
+    T proxyInstance = realmConfiguration.newProxyInstance(obj);
+    
+    CString objectTypeC = CString.allocate(proxyInstance.runtimeType.toString());
+    RealmObjectPointer objectPointer = bindings.wrapper_add_object(_databasePointer, objectTypeC);
+    objectTypeC.free();
+
+    proxyInstance.setDatabasePointer(_databasePointer);
+    proxyInstance.setNativePointer(objectPointer);
+    
+    return proxyInstance;
+  }
+
 }

@@ -9,6 +9,7 @@ add_compile_options(-Wall -DREALM_HAVE_CONFIG)
 add_compile_options("$<$<CONFIG:DEBUG>:-DREALM_DEBUG>")
 
 add_subdirectory(external/object-store)
+include_directories(external/object-store/external/json)
 
 add_library(realm-dart SHARED
   database.cpp

@@ -1,11 +1,22 @@
-import "../lib/src/dart/realm.dart";
+import 'package:realm/src/dart/realmconfiguration.dart';
+import 'package:realm/src/dart/realmmodel.dart';
 
-void main() {
-  Database d = Database("demo.realm");
-  d.put("first name", "Nabil");
-  d.put("last name", "Hachicha");
-  String firstName = d.get("first name");
-  String lastName = d.get("last name");
-  print("Hello $firstName $lastName");
-  d.close();
+import "../lib/src/dart/realm.dart";
+import 'model/dog.dart';
+import 'model/person.dart';
+import 'model/realmmodule.dart';
+
+void main() async {
+  var realm = await Database()
+  ..realmConfiguration = RealmModuleGenerated()
+  ..open();
+  
+  Dog dog = Dog();
+  dog.name = "Akamaru";
+  await realm.beginTransaction();// TODO use then?
+  Dog managedDog = await realm.create<Dog>(dog);//TODO replace with dog reference
+  await realm.commitTransaction();
+
+  print("Dog name ${managedDog.name}");
+  await realm.close();
 }
