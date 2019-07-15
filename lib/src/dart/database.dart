@@ -38,7 +38,7 @@ class Database {
   Future<T> create<T extends RealmModel>(T obj) async {
     T proxyInstance = realmConfiguration.newProxyInstance(obj);
     
-    CString objectTypeC = CString.allocate(proxyInstance.runtimeType.toString());
+    CString objectTypeC = CString.allocate(obj.runtimeType.toString());
     RealmObjectPointer objectPointer = bindings.wrapper_add_object(_databasePointer, objectTypeC);
     objectTypeC.free();
 

@@ -28,7 +28,7 @@ Database::Database(const char *name, const char* schema)
 	config.schema_version = 1;
 	config.schema = Schema{
 		//{"Dog", {{"name", PropertyType::String, Property::IsPrimary{true}}, {"value", PropertyType::String}}},
-		{"Dog", {{"name", PropertyType::String}}},
+		{"Dog", {{"name", PropertyType::String|PropertyType::Nullable}}},
 	};
 	config.path = name;
 	this->m_realm = Realm::get_shared_realm(config);
