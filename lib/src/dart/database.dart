@@ -23,16 +23,19 @@ class Realm {
     bindings.wrapper_destroy(_databasePointer);
   }
 
-  Future<void> beginTransaction() async {
+  Future<Realm> beginTransaction() async {
     bindings.wrapper_begin_transaction(_databasePointer);
+    return this;
   }
 
-  Future<void> commitTransaction() async {
+  Future<Realm> commitTransaction() async {
     bindings.wrapper_commit_transaction(_databasePointer);
+    return this;
   }
 
-  Future<void> cancelTransaction() async {
+  Future<Realm> cancelTransaction() async {
     bindings.wrapper_cancel_transaction(_databasePointer);
+    return this;
   }
 
   Future<T> create<T extends RealmModel>() async {

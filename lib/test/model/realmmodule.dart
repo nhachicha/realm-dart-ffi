@@ -1,5 +1,6 @@
 import 'package:realm/src/dart/realmconfiguration.dart';
 import 'package:realm/src/dart/realmmodel.dart';
+import 'package:realm/test/constants.dart';
 // import 'package:realm/src/dart/realmschema.dart';
 
 import 'dog.dart';
@@ -14,7 +15,7 @@ part 'realmmodule.g.dart';
 class RealmModule extends RealmConfiguration {
   @override
   String path() {
-    return "/Users/Nabil/Dev/realm/realm-dart-ffi/test.realm";
+    return realm_test_directory + "test.realm";
   }
 
   @override
