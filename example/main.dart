@@ -7,7 +7,7 @@ import 'model/person.dart';
 import 'model/realmmodule.dart';
 
 void main() async {
-  var realm = await Database()
+  var realm = await Realm()
   ..realmConfiguration = RealmModuleGenerated()
   ..open();
   

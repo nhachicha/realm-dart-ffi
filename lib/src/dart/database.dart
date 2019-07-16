@@ -5,7 +5,7 @@ import 'package:realm/src/dart/realmconfiguration.dart';
 import "bindings/bindings.dart";
 import "ffi/cstring.dart";
 
-class Database {
+class Realm {
   RealmConfiguration realmConfiguration; // to be injected with the one generated at compile time
   DatabasePointer _databasePointer;
 

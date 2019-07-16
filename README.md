@@ -18,13 +18,7 @@ make
 
 ## Running 
 
-- [Example](./example/main.dart):
-```Dart
-  Database d = Database("demo.realm");
-  d.put("first name", "Nabil");
-  String firstName = d.get("first name");
-```
-
+<!-- ### Example 
 - Run the example (from the root directory `realm-dart-ffi`)
 ```
 realm-dart-ffi> pub get
@@ -42,6 +36,19 @@ Get key: last name
 Hello Nabil Hachicha
 Closing database 
 ```
+- [Example](./example/main.dart):
+```Dart
+  Database d = Database("demo.realm");
+  d.put("first name", "Nabil");
+  String firstName = d.get("first name");
+```
 
 You can also inspect the generated Realm database using [Realm Studio](https://realm.io/products/realm-studio/)
-![](./art/screenshot.png)
+![](./art/screenshot.png) -->
+
+### Tests
+<!-- update with 'pub run build_runner test' once we add code gen  -->
+- All tests `pub run test lib/test` _(test runner considers any file that ends with _test.dart to be a test file)_
+- Specific test file `pub run test lib/test/api_test.dart`
+- Specific tests cases to run by name `pub run test lib/test -n "test name"`
+
