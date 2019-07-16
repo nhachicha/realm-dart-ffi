@@ -99,8 +99,10 @@ const char* object_get_string(realm_object_t *obj_ptr, const char* property_name
 {
 	realm::Object* obj = static_cast<realm::Object *>(obj_ptr->obj);
 	realm::CppContext context(obj->realm());
-	std::string value = any_cast<std::string>(obj->get_property_value<util::Any>(context, property_name));
-	return value.c_str();
+	std::string value = realm::util::any_cast<std::string>(obj->get_property_value<util::Any>(context, property_name));
+	char* data = new char[value.size()];
+	std::strcpy(data, value.c_str());
+	return data;
 }
 
 template<typename ValueType>
@@ -128,5 +130,5 @@ void object_set_double(realm_object_t *obj_ptr, const char* property_name, doubl
 
 void object_set_string(realm_object_t *obj_ptr, const char* property_name, const char* value)
 {
-	object_set_value(obj_ptr, property_name, util::Any(value));
+	object_set_value(obj_ptr, property_name, util::Any(std::string(value)));
 }
