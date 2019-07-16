@@ -71,6 +71,11 @@ class Dog$Realm extends Dog {
   }
   
   @override
+  String tableName() {
+    return "Dog";
+  }
+
+  @override
   void setDatabasePointer(DatabasePointer databasePointer) {
     _databasePointer = databasePointer;
 

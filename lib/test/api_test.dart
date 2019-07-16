@@ -19,7 +19,7 @@ void main() {
 
     test("Create Object", () async {
       await realm.beginTransaction(); // TODO use then?
-      Dog dog = await realm.create<Dog>(Dog());
+      Dog dog = await realm.create<Dog>();
       dog.name = "Akamaru";
       await realm.commitTransaction();
 

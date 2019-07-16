@@ -19,6 +19,8 @@ class RealmModel {
 // }
   String schemaToJson() {}
 
+  String tableName() {}
+
   void setDatabasePointer(DatabasePointer databasePointer) {}
   void setNativePointer(RealmObjectPointer objectPointer) {}
   

@@ -35,10 +35,10 @@ class Realm {
     bindings.wrapper_cancel_transaction(_databasePointer);
   }
 
-  Future<T> create<T extends RealmModel>(T obj) async {
-    T proxyInstance = realmConfiguration.newProxyInstance(obj);
+  Future<T> create<T extends RealmModel>() async {
+    T proxyInstance = realmConfiguration.newProxyInstance<T>(T);
     
-    CString objectTypeC = CString.allocate(obj.runtimeType.toString());
+    CString objectTypeC = CString.allocate(proxyInstance.tableName());
     RealmObjectPointer objectPointer = bindings.wrapper_add_object(_databasePointer, objectTypeC);
     objectTypeC.free();
 

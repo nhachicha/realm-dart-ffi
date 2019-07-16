@@ -14,10 +14,10 @@ class RealmModuleGenerated extends RealmModule {
   }
 
   @override
-  T newProxyInstance<T extends RealmModel> (T obj) {
-    if (obj.runtimeType == Dog) {
+  T newProxyInstance<T extends RealmModel> (Type type) {
+    if (type == Dog) {
       return Dog$Realm() as T;
     }
-    throw Exception("Unsupported type ${obj}");
+    throw Exception("Unsupported type ${type}");
   }
 }

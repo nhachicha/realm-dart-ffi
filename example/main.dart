@@ -14,7 +14,7 @@ void main() async {
   Dog dog = Dog();
   dog.name = "Akamaru";
   await realm.beginTransaction();// TODO use then?
-  Dog managedDog = await realm.create<Dog>(dog);//TODO replace with dog reference
+  Dog managedDog = await realm.create<Dog>();//TODO replace with dog reference
   managedDog.name = "Hello Zepp!";
   await realm.commitTransaction();
 

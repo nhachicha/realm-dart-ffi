@@ -15,7 +15,7 @@ abstract class RealmConfiguration {
     var jsonSchema = new StringBuffer();
     jsonSchema.write("[\n");
     for (var s in schema()) {
-      RealmModel model = newProxyInstance(s);
+      RealmModel model = newProxyInstance(s.runtimeType);
       jsonSchema.write(model.schemaToJson());
       jsonSchema.write(",");
     }
@@ -43,7 +43,7 @@ abstract class RealmConfiguration {
   }
 
   // will return the code generated instance of the given class
-  T newProxyInstance<T extends RealmModel>(T obj) {
+  T newProxyInstance<T extends RealmModel>(Type type) {
     throw Exception(
         "This should not be invoked as is, only overrided by code generated instance that extends RealmConfiguration");
   } //THIS will be implemented by the generated RealmConfiguration instance
