@@ -68,7 +68,7 @@ class Dog$Realm extends Dog {
       }
     }''';
   }
-  
+
   @override
   String tableName() {
     return "Dog";
@@ -77,5 +77,9 @@ class Dog$Realm extends Dog {
   @override
   void setNativePointer(Pointer<types.RealmObject> objectPointer) {
     _objectPointer = objectPointer;
+  }
+  @override
+  Pointer<types.RealmObject> getNativePointer() {
+    return _objectPointer;
   }
 }

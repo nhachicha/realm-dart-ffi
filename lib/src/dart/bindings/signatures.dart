@@ -16,6 +16,8 @@ typedef wrapper_cancel_transaction_native_t = Void Function(Pointer<Database> da
 
 typedef wrapper_add_object_native_t = Pointer<RealmObject> Function(Pointer<Database> databasePointer, Pointer<Utf8> objectType);
 
+typedef wrapper_delete_object_native_t = Void Function(Pointer<Database> databasePointer, Pointer<RealmObject> object);
+
 typedef wrapper_object_get_bool_native_t = Int8 Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName);
 
 typedef wrapper_object_set_bool_native_t = Void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, Int8 value);
@@ -34,6 +36,8 @@ typedef wrapper_object_set_string_native_t = Void Function(Pointer<RealmObject> 
 
 typedef wrapper_query_native_t = Pointer<RealmResults> Function(Pointer<Database> databasePointer, Pointer<Utf8> object_type, Pointer<Utf8> query_string);
 
-typedef wrapper_query_size_native_t = Uint64 Function(Pointer<RealmResults> realmresultsPointer);
+typedef wrapper_results_size_native_t = Uint64 Function(Pointer<RealmResults> realmresultsPointer);
 
-typedef wrapper_query_get_native_t = Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, Int64 index);
+typedef wrapper_results_delete_native_t = Void Function(Pointer<RealmResults> realmresultsPointer);
+
+typedef wrapper_results_get_native_t = Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, Int64 index);

@@ -52,6 +52,10 @@ class Realm {
     return proxyInstance;
   }
 
+  Future<void> delete<T extends RealmModel>(T objectInstance) async {
+    bindings.wrapper_delete_object(_databasePointer, objectInstance.getNativePointer());
+  }
+
   Future<RealmResults<T>> objects<T extends RealmModel>(String query) async {
     // create RealmResults which holds the query results
     RealmResults<T> realmresultsInstance = realmConfiguration.newRealmResultsInstance<T>(T);

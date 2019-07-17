@@ -3,6 +3,8 @@
 #include "wrapper.h"
 #include "database.h"
 #include "impl/object_accessor_impl.hpp"
+
+#include <object_store.hpp>
 #include <realm/group_shared.hpp>
 
 #include <realm/parser/parser.hpp>
@@ -71,7 +73,8 @@ void cancel_transaction(database_t *db_ptr)
 realm_object_t *add_object(database_t *db_ptr, const char *object_type)
 {
 	Database *db = static_cast<Database *>(db_ptr->db);
-	auto &table = *db->realm()->read_group().get_table(std::string("class_").append(object_type));
+	std::string table_name = realm::ObjectStore::table_name_for_object_type(object_type);
+	auto &table = *db->realm()->read_group().get_table(table_name);
 	size_t row_ndx = table.add_empty_row();
 	Object *obj = new Object(db->realm(), object_type, row_ndx);
 
@@ -80,6 +83,12 @@ realm_object_t *add_object(database_t *db_ptr, const char *object_type)
 	obj_ptr->obj = obj;
 
 	return obj_ptr;
+}
+
+void delete_object(database_t *db_ptr, realm_object_t* instance)
+{
+	realm::Object *obj = static_cast<realm::Object *>(instance->obj);
+	obj->row().move_last_over();
 }
 
 int8_t object_get_bool(realm_object_t *obj_ptr, const char *property_name)
@@ -164,6 +173,12 @@ size_t realmresults_size(realm_results_t *realm_results_ptr)
 {
 	Results *results = static_cast<Results *>(realm_results_ptr->results);
 	return results->size();
+}
+
+void realmresults_delete(realm_results_t *realm_results_ptr)
+{
+	Results *results = static_cast<Results *>(realm_results_ptr->results);
+	results->clear();
 }
 
 realm_object_t* realmresults_get(realm_results_t *realm_results_ptr, const char* object_type, size_t row_ndx)

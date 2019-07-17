@@ -19,6 +19,11 @@ import 'dart:ffi';
   }
 
   @override
+  void clear() {
+    bindings.wrapper_realmresults_delete(nativePointer);
+  }
+
+  @override
   T operator [](int index) {
     // get native pointer & invoke the wrapper 
     final Pointer<Utf8> tableNameC = Utf8.allocate(tableName);

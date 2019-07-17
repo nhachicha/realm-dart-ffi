@@ -26,7 +26,8 @@ extern "C"
 
     // create an Object of type 'object_type' and return its pointer 
     realm_object_t* add_object(database_t *db_ptr, const char *object_type);
-    
+    void delete_object(database_t *db_ptr, realm_object_t* instance);
+
     int8_t object_get_bool(realm_object_t *obj_ptr, const char* property_name);
     int64_t object_get_int64(realm_object_t *obj_ptr, const char* property_name);
     double object_get_double(realm_object_t *obj_ptr, const char* property_name);
@@ -40,6 +41,7 @@ extern "C"
     // ***********       QUERY     *********** //
     realm_results_t* query(database_t *db_ptr, const char *object_type, const char* query);
     size_t realmresults_size(realm_results_t *realm_results_ptr);
+    void realmresults_delete(realm_results_t *realm_results_ptr);
     realm_object_t* realmresults_get(realm_results_t *realm_results_ptr, const char* object_type, size_t row_ndx);
 
 #ifdef __cplusplus

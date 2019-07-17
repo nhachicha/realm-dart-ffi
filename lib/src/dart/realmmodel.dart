@@ -23,5 +23,6 @@ class RealmModel {
   String tableName() {}
 
   void setNativePointer(Pointer<types.RealmObject> objectPointer) {}
+  Pointer<types.RealmObject> getNativePointer() { return null; }
   
 }

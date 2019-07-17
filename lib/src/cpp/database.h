@@ -8,13 +8,10 @@ using namespace realm;
 class Database
 {
 public:
-	// Database(const char *name);
 	Database(const char *name, const char* schema);
 	~Database();
 	SharedRealm const& realm() const { return m_realm; }
-	
 private:
-	// const char *db_name;
 	SharedRealm m_realm;
 };
 

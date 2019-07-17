@@ -15,6 +15,7 @@ class _RealmBindings {
   void Function(Pointer<Database> databasePointer) wrapper_commit_transaction;
   void Function(Pointer<Database> databasePointer) wrapper_cancel_transaction;
   Pointer<RealmObject> Function(Pointer<Database> databasePointer, Pointer<Utf8> objectType) wrapper_add_object;
+  void Function(Pointer<Database> databasePointer, Pointer<RealmObject>) wrapper_delete_object;
   int Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_bool;
   void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, int value) wrapper_object_set_bool;
   int Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_int64;
@@ -25,6 +26,7 @@ class _RealmBindings {
   void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, Pointer<Utf8> value) wrapper_object_set_string;
   Pointer<RealmResults> Function(Pointer<Database> databasePointer, Pointer<Utf8> object_type, Pointer<Utf8> query_string) wrapper_query;
   int Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_size;
+  void Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_delete;
   Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, int index) wrapper_realmresults_get;
 
   _RealmBindings({String path = './lib/src/cpp/'}) {
@@ -46,6 +48,9 @@ class _RealmBindings {
         .asFunction();
     wrapper_add_object = realm
         .lookup<NativeFunction<wrapper_add_object_native_t>>("add_object")
+        .asFunction();
+    wrapper_delete_object = realm
+        .lookup<NativeFunction<wrapper_delete_object_native_t>>("delete_object")
         .asFunction();
     wrapper_object_get_bool = realm
         .lookup<NativeFunction<wrapper_object_get_bool_native_t>>("object_get_bool")
@@ -75,10 +80,13 @@ class _RealmBindings {
         .lookup<NativeFunction<wrapper_query_native_t>>("query")
         .asFunction();
     wrapper_realmresults_size = realm
-        .lookup<NativeFunction<wrapper_query_size_native_t>>("realmresults_size")
+        .lookup<NativeFunction<wrapper_results_size_native_t>>("realmresults_size")
+        .asFunction();
+    wrapper_realmresults_delete = realm
+        .lookup<NativeFunction<wrapper_results_delete_native_t>>("realmresults_delete")
         .asFunction();
     wrapper_realmresults_get = realm
-        .lookup<NativeFunction<wrapper_query_get_native_t>>("realmresults_get")
+        .lookup<NativeFunction<wrapper_results_get_native_t>>("realmresults_get")
         .asFunction();      
   }
 }
