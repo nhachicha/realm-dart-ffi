@@ -18,4 +18,15 @@ add_library(realm-dart SHARED
   wrapper.cpp
 )
 
-target_link_libraries(realm-dart realm-object-store ${CMAKE_CURRENT_SOURCE_DIR}/external/object-store/CMakeFiles/realm-core-5.12.7/librealm-parser.a)
+file(STRINGS "${CMAKE_SOURCE_DIR}/external/object-store/dependencies.list" DEPENDENCIES)
+foreach(LINE IN LISTS DEPENDENCIES)
+    string(REGEX MATCHALL "([^=]+)" KEY_VALUE ${LINE})
+    list(LENGTH KEY_VALUE matches_count)
+    if(matches_count STREQUAL 2)
+        list(GET KEY_VALUE 0 KEY)
+        list(GET KEY_VALUE 1 VALUE)
+        set(DEP_${KEY} ${VALUE})
+    endif()
+endforeach()
+
+target_link_libraries(realm-dart realm-object-store ${CMAKE_CURRENT_SOURCE_DIR}/external/object-store/CMakeFiles/realm-core-${DEP_REALM_CORE_VERSION}/librealm-parser.a)
