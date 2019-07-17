@@ -1,5 +1,7 @@
 // import 'package:realm/src/dart/realmmodel.dart';
 
+import 'package:realm/src/dart/realmresults.dart';
+
 import 'realmmodel.dart';
 
 abstract class RealmConfiguration {
@@ -102,4 +104,9 @@ abstract class RealmConfiguration {
     throw Exception(
         "This should not be invoked as is, only overrided by code generated instance that extends RealmConfiguration");
   } //THIS will be implemented by the generated RealmConfiguration instance
+
+  RealmResults<T> newRealmResultsInstance<T extends RealmModel>(Type type) {
+    throw Exception(
+        "This should not be invoked as is, only overrided by code generated instance that extends RealmConfiguration");
+  }
 }

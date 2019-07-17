@@ -9,8 +9,7 @@ part of 'dog.dart';
 // import 'package:realm/src/dart/bindings/bindings.dart';
 
 class Dog$Realm extends Dog {
-  DatabasePointer _databasePointer;
-  RealmObjectPointer _objectPointer;
+  Pointer<types.RealmObject> _objectPointer;
   // // NEED to port Row interface from Java and use it as composition/mixin to access/set properties of this Object/Row
   // @Override
   // @SuppressWarnings("cast")
@@ -44,16 +43,16 @@ class Dog$Realm extends Dog {
 
   // String get name  => "<<___${super.name}___>>";
   String get name {
-    CString propertyNameC = CString.allocate("name"); //TODO cache to avoid lookup then free when object is finalized 
-    CString valueC = bindings.wrapper_object_get_string(_objectPointer, propertyNameC);
-    String value = CString.fromUtf8(valueC);
-    // valueC.free();
+    final Pointer<Utf8> propertyNameC = Utf8.allocate("name"); //TODO cache to avoid lookup then free when object is finalized
+    final Pointer<Utf8> valueC = bindings.wrapper_object_get_string(_objectPointer, propertyNameC);
+    String value = valueC.load<Utf8>().toString();
+    valueC.free();
     return value;
   }
 
   set name(String newName) {
-    CString propertyNameC = CString.allocate("name");
-    CString valueC = CString.allocate(newName);
+    final Pointer<Utf8> propertyNameC = Utf8.allocate("name");
+    final Pointer<Utf8> valueC = Utf8.allocate(newName);
     bindings.wrapper_object_set_string(_objectPointer, propertyNameC, valueC);
     valueC.free();
   }
@@ -76,13 +75,7 @@ class Dog$Realm extends Dog {
   }
 
   @override
-  void setDatabasePointer(DatabasePointer databasePointer) {
-    _databasePointer = databasePointer;
-
-  }
-
-  @override
-  void setNativePointer(RealmObjectPointer objectPointer) {
+  void setNativePointer(Pointer<types.RealmObject> objectPointer) {
     _objectPointer = objectPointer;
   }
 }

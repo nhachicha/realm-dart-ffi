@@ -17,4 +17,5 @@ add_library(realm-dart SHARED
   database.cpp
   wrapper.cpp
 )
-target_link_libraries(realm-dart realm-object-store)
+
+target_link_libraries(realm-dart realm-object-store ${CMAKE_CURRENT_SOURCE_DIR}/external/object-store/CMakeFiles/realm-core-5.12.7/librealm-parser.a)

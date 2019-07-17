@@ -1,5 +1,7 @@
 import "dart:ffi";
 
-class DatabasePointer extends Pointer<Void> {}
+class Database extends Struct<Database> {}
 
-class RealmObjectPointer extends Pointer<Void> {}
+class RealmObject extends Struct<RealmObject> {}
+
+class RealmResults extends Struct<RealmResults> {}

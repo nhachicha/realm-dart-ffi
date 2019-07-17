@@ -1,4 +1,4 @@
-import 'dart:io';
+ import 'dart:io';
 
 import 'package:realm/src/dart/realm.dart';
 import 'package:realm/test/constants.dart';
@@ -9,22 +9,14 @@ import "package:test/test.dart";
 void main() {
   group("Realm", () {
     Realm realm;
-
     setUp(() async {
-      final test_dir =  Directory(realm_test_directory);
-    
-      await test_dir.exists()
-      .then((isThere) {
-        if (isThere) {
-          return test_dir
-          .delete(recursive: true)
-          .then((_) => test_dir.create());
-        } else {
-          return test_dir.create();
-        }
-      });
+      final test_dir = Directory(realm_test_directory);
 
-      realm = await Realm()
+      if (test_dir.existsSync()) {
+        test_dir.deleteSync(recursive: true);
+      }
+      test_dir.createSync();
+      return realm = await Realm()
         ..realmConfiguration = RealmModuleGenerated()
         ..open();
     });
@@ -34,7 +26,7 @@ void main() {
     });
 
     test("Create Object", () async {
-      await realm.beginTransaction(); 
+      await realm.beginTransaction();
       Dog dog = await realm.create<Dog>();
       dog.name = "Akamaru";
       await realm.commitTransaction();
@@ -42,5 +34,15 @@ void main() {
       expect(dog.name, "Akamaru");
     });
 
+    test("Query Object", () async {
+      await realm.beginTransaction();
+      Dog dog = await realm.create<Dog>();
+      dog.name = "Akamaru";
+      await realm.commitTransaction();
+
+      List<Dog> dogs = await realm.objects<Dog>('name beginswith "Akam"');
+      expect(dogs.length, 1);
+      expect(dogs[0].name, "Akamaru");
+    });
   });
 }

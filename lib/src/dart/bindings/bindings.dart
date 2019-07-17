@@ -1,28 +1,31 @@
 import "dart:ffi";
 
-import "../ffi/cstring.dart";
-import "../ffi/dylib_utils.dart";
+import 'package:realm/src/dart/ffi/dylib_utils.dart';
 
-import "signatures.dart";
+import 'package:realm/src/dart/bindings/signatures.dart';
 import 'package:realm/src/dart/bindings/types.dart';
+import 'package:realm/src/dart/ffi/utf8.dart';
 
 class _RealmBindings {
   DynamicLibrary realm;
 
-  DatabasePointer Function(CString filename, CString schema) wrapper_create;
-  void Function(DatabasePointer database) wrapper_destroy;
-  void Function(DatabasePointer databasePointer) wrapper_begin_transaction;
-  void Function(DatabasePointer databasePointer) wrapper_commit_transaction;
-  void Function(DatabasePointer databasePointer) wrapper_cancel_transaction;
-  RealmObjectPointer Function(DatabasePointer databasePointer, CString objectType) wrapper_add_object;
-  int Function(RealmObjectPointer objectPointer, CString propertyName) wrapper_object_get_bool;
-  void Function(RealmObjectPointer objectPointer, CString propertyName, int value) wrapper_object_set_bool;
-  int Function(RealmObjectPointer objectPointer, CString propertyName) wrapper_object_get_int64;
-  void Function(RealmObjectPointer objectPointer, CString propertyName, int value) wrapper_object_set_int64;
-  double Function(RealmObjectPointer objectPointer, CString propertyName) wrapper_object_get_double;
-  void Function(RealmObjectPointer objectPointer, CString propertyName, double value) wrapper_object_set_double;
-  CString Function(RealmObjectPointer objectPointer, CString propertyName) wrapper_object_get_string;
-  void Function(RealmObjectPointer objectPointer, CString propertyName, CString value) wrapper_object_set_string;
+  Pointer<Database> Function(Pointer<Utf8> filename, Pointer<Utf8> schema) wrapper_create;
+  void Function(Pointer<Database> database) wrapper_destroy;
+  void Function(Pointer<Database> databasePointer) wrapper_begin_transaction;
+  void Function(Pointer<Database> databasePointer) wrapper_commit_transaction;
+  void Function(Pointer<Database> databasePointer) wrapper_cancel_transaction;
+  Pointer<RealmObject> Function(Pointer<Database> databasePointer, Pointer<Utf8> objectType) wrapper_add_object;
+  int Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_bool;
+  void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, int value) wrapper_object_set_bool;
+  int Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_int64;
+  void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, int value) wrapper_object_set_int64;
+  double Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_double;
+  void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, double value) wrapper_object_set_double;
+  Pointer<Utf8> Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_string;
+  void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, Pointer<Utf8> value) wrapper_object_set_string;
+  Pointer<RealmResults> Function(Pointer<Database> databasePointer, Pointer<Utf8> object_type, Pointer<Utf8> query_string) wrapper_query;
+  int Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_size;
+  Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, int index) wrapper_realmresults_get;
 
   _RealmBindings({String path = './lib/src/cpp/'}) {
     realm = dlopenPlatformSpecific("realm-dart", path: path);
@@ -55,7 +58,7 @@ class _RealmBindings {
         .asFunction();
     wrapper_object_set_int64 = realm
         .lookup<NativeFunction<wrapper_object_set_int64_native_t>>("object_set_int64")
-        .asFunction();        
+        .asFunction();
     wrapper_object_get_double = realm
         .lookup<NativeFunction<wrapper_object_get_double_native_t>>("object_get_double")
         .asFunction();
@@ -68,6 +71,15 @@ class _RealmBindings {
     wrapper_object_set_string = realm
         .lookup<NativeFunction<wrapper_object_set_string_native_t>>("object_set_string")
         .asFunction();        
+    wrapper_query = realm
+        .lookup<NativeFunction<wrapper_query_native_t>>("query")
+        .asFunction();
+    wrapper_realmresults_size = realm
+        .lookup<NativeFunction<wrapper_query_size_native_t>>("realmresults_size")
+        .asFunction();
+    wrapper_realmresults_get = realm
+        .lookup<NativeFunction<wrapper_query_get_native_t>>("realmresults_get")
+        .asFunction();      
   }
 }
 

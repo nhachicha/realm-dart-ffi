@@ -4,6 +4,11 @@
 #include "database.h"
 #include "impl/object_accessor_impl.hpp"
 #include <realm/group_shared.hpp>
+
+#include <realm/parser/parser.hpp>
+#include <realm/parser/query_builder.hpp>
+
+
 #define typeof __typeof__
 
 struct database
@@ -14,6 +19,11 @@ struct database
 struct realm_object
 {
 	void *obj;
+};
+
+struct realm_results
+{
+	void *results;
 };
 
 database_t *create(const char *db_name, const char *schema)
@@ -129,4 +139,42 @@ void object_set_double(realm_object_t *obj_ptr, const char *property_name, doubl
 void object_set_string(realm_object_t *obj_ptr, const char *property_name, const char *value)
 {
 	object_set_value(obj_ptr, property_name, util::Any(std::string(value)));
+}
+
+realm_results_t* query(database_t *db_ptr, const char *object_type, const char* query_string)
+{
+	Database *db = static_cast<Database *>(db_ptr->db);
+	auto &table = *db->realm()->read_group().get_table(std::string("class_").append(object_type));
+	Query query = table.where();
+
+	realm::query_builder::NoArguments args;
+
+	parser::ParserResult res = realm::parser::parse(query_string);
+	realm::query_builder::apply_predicate(query, res.predicate, args);
+
+	Results* results = new Results(db->realm(), query);
+	
+	realm_results_t *results_ptr;
+	results_ptr = (typeof(results_ptr))malloc(sizeof(*results_ptr));
+	results_ptr->results = results;
+	return results_ptr;
+}
+
+size_t realmresults_size(realm_results_t *realm_results_ptr)
+{
+	Results *results = static_cast<Results *>(realm_results_ptr->results);
+	return results->size();
+}
+
+realm_object_t* realmresults_get(realm_results_t *realm_results_ptr, const char* object_type, size_t row_ndx)
+{
+	Results *results = static_cast<Results *>(realm_results_ptr->results);
+	auto row =  results->get(row_ndx);
+	Object *obj = new Object(results->get_realm(), *results->get_realm()->schema().find(object_type), row);
+
+	realm_object_t *obj_ptr;
+	obj_ptr = (typeof(obj_ptr))malloc(sizeof(*obj_ptr)); 
+	obj_ptr->obj = obj;
+
+	return obj_ptr;
 }

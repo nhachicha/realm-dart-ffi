@@ -1,10 +1,11 @@
 
-// import 'package:realm/src/dart/bindings/types.dart';
+import 'dart:ffi';
+import 'package:realm/src/dart/bindings/types.dart' as types;
 // import "bindings/types.dart";
 // import 'package:realm/src/dart/bindings/bindings.dart';
 // import 'package:realm/src/dart/realm.dart';
 
-import 'bindings/types.dart';
+//import 'bindings/types.dart';
 
 class RealmModel {
   // Schema String should be compatible with JS
@@ -21,7 +22,6 @@ class RealmModel {
 
   String tableName() {}
 
-  void setDatabasePointer(DatabasePointer databasePointer) {}
-  void setNativePointer(RealmObjectPointer objectPointer) {}
+  void setNativePointer(Pointer<types.RealmObject> objectPointer) {}
   
 }

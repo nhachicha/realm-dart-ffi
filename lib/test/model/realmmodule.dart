@@ -1,5 +1,6 @@
 import 'package:realm/src/dart/realmconfiguration.dart';
 import 'package:realm/src/dart/realmmodel.dart';
+import 'package:realm/src/dart/realmresults.dart';
 import 'package:realm/test/constants.dart';
 // import 'package:realm/src/dart/realmschema.dart';
 
