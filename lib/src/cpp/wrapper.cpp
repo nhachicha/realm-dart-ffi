@@ -31,7 +31,7 @@ database_t *create(const char *db_name, const char *schema)
 	database_t *db_ptr;
 	Database *db;
 
-	db_ptr = (typeof(db_ptr))malloc(sizeof(*db_ptr));
+	db_ptr = new database_t();
 	db = new Database(db_name, schema);
 	db_ptr->db = db;
 
@@ -40,10 +40,10 @@ database_t *create(const char *db_name, const char *schema)
 
 void destroy(database_t *db_ptr)
 {
-	if (db_ptr == NULL)
+	if (db_ptr == nullptr)
 		return;
 	delete static_cast<Database *>(db_ptr->db);
-	free(db_ptr);
+	delete static_cast<database_t *>(db_ptr);
 }
 
 // ***********      REALM      *********** //

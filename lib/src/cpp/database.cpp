@@ -128,7 +128,6 @@ realm::ObjectSchema parse_object_schema(json &object_schema)
 			std::string value = json_prop.value();
 			parse_property_type(os.name, prop, value);
 		} else if (value_type == json::value_t::object) {
-			std::cout << "parsing object type: " << prop.name << std::endl;
 			json prop_object = json_prop.value();
 
 			auto prop_type = prop_object.find("type");
@@ -202,12 +201,9 @@ realm::ObjectSchema parse_object_schema(json &object_schema)
 
 realm::Schema parse_schema(const char* schema)
 {
-	std::cout << "received json: " << schema << std::endl;
 	json json = json::parse(schema);
-
 	std::vector<ObjectSchema> schemas;
-	for (auto it : json)
-	{
+	for (auto it : json) {
 		schemas.push_back(parse_object_schema(it));
 	}
 	return Schema{schemas};
@@ -220,4 +216,11 @@ Database::Database(const char *name, const char* schema)
 	config.schema = parse_schema(schema);
 	config.path = name;
 	this->m_realm = Realm::get_shared_realm(config);
+}
+
+Database::~Database()
+{
+	if (this->m_realm) {
+		this->m_realm->close();
+	}
 }

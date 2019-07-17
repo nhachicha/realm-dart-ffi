@@ -10,6 +10,7 @@ class Database
 public:
 	// Database(const char *name);
 	Database(const char *name, const char* schema);
+	~Database();
 	SharedRealm const& realm() const { return m_realm; }
 	
 private:

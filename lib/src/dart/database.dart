@@ -16,13 +16,14 @@ class Realm {
     final Pointer<Utf8> schemaC = Utf8.allocate(realmConfiguration.getSchemaAsJSON());
 
     _databasePointer = bindings.wrapper_create(pathC, schemaC);
-    
+
     pathC.free();
     schemaC.free();
   }
 
   Future<void> close() async {
     bindings.wrapper_destroy(_databasePointer);
+    _databasePointer = null;
   }
 
   Future<Realm> beginTransaction() async {

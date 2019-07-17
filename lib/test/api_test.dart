@@ -15,6 +15,7 @@ void main() {
       if (test_dir.existsSync()) {
         test_dir.deleteSync(recursive: true);
       }
+
       test_dir.createSync();
       return realm = await Realm()
         ..realmConfiguration = RealmModuleGenerated()
@@ -32,7 +33,7 @@ void main() {
       await realm.commitTransaction();
 
       expect(dog.name, "Akamaru");
-    }, skip: "TODO: this Realm is not cleaned correctly causing the next query to return 2 dog instances instead of 1");
+    });
     
     test("Query Object", () async {
       await realm.beginTransaction();
