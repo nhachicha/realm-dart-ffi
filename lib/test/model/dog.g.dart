@@ -9,6 +9,9 @@ part of 'dog.dart';
 // import 'package:realm/src/dart/bindings/bindings.dart';
 
 class Dog$Realm extends Dog {
+  Pointer<types.RealmList> _othersRealmListPointer;
+  Pointer<types.RealmObject> _otherRealmLinkPointer;
+  Realm realm;
   // Pointer<types.RealmObject> _objectPointer;
   // // NEED to port Row interface from Java and use it as composition/mixin to access/set properties of this Object/Row
   // @Override
@@ -57,6 +60,21 @@ class Dog$Realm extends Dog {
     valueC.free();
   }
 
+  Dog get other {
+    // TODO cache the returned value  
+    Dog$Realm dog = Dog$Realm();
+    dog.objectPointer = _otherRealmLinkPointer;
+    return dog;
+  }
+
+  RealmList<Dog> get others {
+    // TODO cache the returned value  
+    RealmList<Dog> dogs = RealmList();
+    dogs.tableName = "Dog";
+    dogs.nativeRealmListPointer = _othersRealmListPointer;
+    return dogs;
+  }
+
   @override
   String get schemaToJson {
     return '''{
@@ -70,10 +88,10 @@ class Dog$Realm extends Dog {
   }
   
   @override
-  String get tableName {
-    return "Dog";
-  }
+  String get tableName => "Dog";
 
+  @override
+  bool get isManaged => true;
   // @override
   // void setNativePointer(Pointer<types.RealmObject> objectPointer) {
   //   _objectPointer = objectPointer;
