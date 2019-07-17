@@ -5,8 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Dart",
+            "name": "demo",
             "program": "example/main.dart",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "test",
+            "program": "lib/test/api_test.dart",
             "request": "launch",
             "type": "dart"
         }

@@ -37,6 +37,61 @@ abstract class RealmConfiguration {
             "name": "string",
             "dog": "Dog"
         }
+    },
+    {
+      "name": "AllTypes",
+      "primaryKey": "simpleString",
+      "properties": {
+          "simpleBool": "bool",
+          "simpleString": "string",
+          "simpleInt": "int",
+          "simpleDouble": "double",
+          "simpleFloat": "float",
+          "simpleTimestamp": "date",
+          "simpleData": "data",
+
+          "optionalBool": "bool?",
+          "optionalString": "string?",
+          "optionalInt": "int?",
+          "optionalDouble": "double?",
+          "optionalFloat": "float?",
+          "optionalTimestamp": "date?",
+          "optionalData": "data?",
+
+          "listBool": "bool[]",
+          "listString": "string[]",
+          "listInt": "int[]",
+          "listDouble": "double[]",
+          "listFloat": "float[]",
+          "listTimestamp": "date[]",
+          "listData": "data[]",
+
+          "constructedBool": {"type": "bool"},
+          "constructedString": {"type": "string"},
+          "constructedInt": {"type": "int"},
+          "constructedDouble": {"type": "double"},
+          "constructedFloat": {"type": "float"},
+          "constructedTimestamp": {"type": "date"},
+          "constructedData": {"type": "data"},
+
+          "constructedOptionalBool": {"type": "bool", "optional": "true"},
+          "constructedOptionalString": {"type": "string", "optional": "true"},
+          "constructedOptionalInt": {"type": "int", "optional": "true"},
+          "constructedOptionalDouble": {"type": "double", "optional": "true"},
+          "constructedOptionalFloat": {"type": "float", "optional": "true"},
+          "constructedOptionalTimestamp": {"type": "date", "optional": "true"},
+          "constructedOptionalData": {"type": "data", "optional": "true"},
+
+          "constructedIndexedBool": {"type": "bool", "indexed": "true"},
+          "constructedIndexedString": {"type": "string", "indexed": "true"},
+          "constructedIndexedInt": {"type": "int", "indexed": "true"},
+          "constructedIndexedTimestamp": {"type": "date", "indexed": "true"},
+
+          "constructedLink": {"type": "AllTypes"},
+          "constructedList": {"type": "list", "objectType":"AllTypes" },
+          "parents": {"type": "linkingObjects", "objectType": "AllTypes", "property": "constructedLink" }
+      }
+
     }
 ]
     ''';
