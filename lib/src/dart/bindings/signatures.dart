@@ -40,4 +40,10 @@ typedef wrapper_results_size_native_t = Uint64 Function(Pointer<RealmResults> re
 
 typedef wrapper_results_delete_native_t = Void Function(Pointer<RealmResults> realmresultsPointer);
 
-typedef wrapper_results_get_native_t = Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, Int64 index);
+typedef wrapper_results_get_native_t = Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, Uint64 index);
+
+typedef wrapper_realmlist_size_native_t = Uint64 Function(Pointer<RealmList> realmresultsPointer);
+
+typedef wrapper_realmlist_get_native_t = Pointer<RealmObject> Function(Pointer<RealmList> nativeRealmListPointer, Pointer<Utf8> object_type, Uint64 index);
+
+typedef wrapper_realmlist_set_native_t = Void Function(Pointer<RealmList> nativeRealmListPointer, Pointer<RealmObject> objectPointer, Uint64 index);

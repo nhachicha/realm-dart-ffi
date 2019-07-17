@@ -18,7 +18,7 @@ abstract class RealmConfiguration {
     jsonSchema.write("[\n");
     for (var s in schema()) {
       RealmModel model = newProxyInstance(s.runtimeType);
-      jsonSchema.write(model.schemaToJson());
+      jsonSchema.write(model.schemaToJson);
       jsonSchema.write(",");
     }
     jsonSchema.write("]\n");

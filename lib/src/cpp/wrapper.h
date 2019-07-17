@@ -9,9 +9,12 @@ extern "C"
     struct database;
     struct realm_object;
     struct realm_results;
+    struct realm_list;
     typedef struct database database_t;
     typedef struct realm_object realm_object_t;
     typedef struct realm_results realm_results_t;
+    typedef struct realm_list realm_list_t;
+    
 
     database_t *create(const char *db_name, const char *schema);
     void destroy(database_t *db_ptr);
@@ -42,7 +45,13 @@ extern "C"
     realm_results_t* query(database_t *db_ptr, const char *object_type, const char* query);
     size_t realmresults_size(realm_results_t *realm_results_ptr);
     void realmresults_delete(realm_results_t *realm_results_ptr);
-    realm_object_t* realmresults_get(realm_results_t *realm_results_ptr, const char* object_type, size_t row_ndx);
+    realm_object_t* realmresults_get(realm_results_t *realm_results_ptr, const char* object_type, size_t index);
+
+    // ***********    REALM LIST   *********** //
+    size_t realmlist_size(realm_list_t *realm_results_ptr);
+    realm_object_t* realmlist_get(realm_list_t *realm_results_ptr, const char* object_type, size_t index);
+    void realmlist_set(realm_list_t *realm_results_ptr, realm_object_t *obj_ptr, size_t index);
+
 
 #ifdef __cplusplus
 }

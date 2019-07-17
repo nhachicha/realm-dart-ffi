@@ -41,14 +41,17 @@ class Realm {
     return this;
   }
 
-  Future<T> create<T extends RealmModel>() async {
+  Future<T> create<T extends RealmModel>([T obj]) async {
     T proxyInstance = realmConfiguration.newProxyInstance<T>(T);
 
-    final Pointer<Utf8> objectTypeC = Utf8.allocate(proxyInstance.tableName());
+    final Pointer<Utf8> objectTypeC = Utf8.allocate(proxyInstance.tableName);
     Pointer<types.RealmObject> objectPointer = bindings.wrapper_add_object(_databasePointer, objectTypeC);
     objectTypeC.free();
 
-    proxyInstance.setNativePointer(objectPointer);
+    proxyInstance.objectPointer = objectPointer;
+    if(obj != null) {
+      proxyInstance.persist(obj);
+    }
     return proxyInstance;
   }
 

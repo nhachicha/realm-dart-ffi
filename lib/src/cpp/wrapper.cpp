@@ -28,6 +28,11 @@ struct realm_results
 	void *results;
 };
 
+struct realm_list
+{
+	void *list;
+};
+
 database_t *create(const char *db_name, const char *schema)
 {
 	database_t *db_ptr;
@@ -192,4 +197,19 @@ realm_object_t* realmresults_get(realm_results_t *realm_results_ptr, const char*
 	obj_ptr->obj = obj;
 
 	return obj_ptr;
+}
+
+size_t realmlist_size(realm_list_t *realm_results_ptr)
+{
+	return 0;
+}
+    
+realm_object_t* realmlist_get(realm_list_t *realm_results_ptr, const char* object_type, size_t index)
+{
+	return nullptr;
+}
+
+void realmlist_set(realm_list_t *realm_results_ptr, realm_object_t *obj_ptr, size_t index)
+{
+
 }

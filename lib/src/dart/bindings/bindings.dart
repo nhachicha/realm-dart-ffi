@@ -27,7 +27,10 @@ class _RealmBindings {
   Pointer<RealmResults> Function(Pointer<Database> databasePointer, Pointer<Utf8> object_type, Pointer<Utf8> query_string) wrapper_query;
   int Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_size;
   void Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_delete;
-  Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, int index) wrapper_realmresults_get;
+  Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, int index) wrapper_realmresults_get;  
+  int Function(Pointer<RealmList> realmresultsPointer) wrapper_realmlist_size;
+  Pointer<RealmObject> Function(Pointer<RealmList> nativeRealmListPointer, Pointer<Utf8> object_type, int index) wrapper_realmlist_get;
+  void Function(Pointer<RealmList> nativeRealmListPointer, Pointer<RealmObject> objectPointer, int index) wrapper_realmlist_set; 
 
   _RealmBindings({String path = './lib/src/cpp/'}) {
     realm = dlopenPlatformSpecific("realm-dart", path: path);
@@ -88,6 +91,15 @@ class _RealmBindings {
     wrapper_realmresults_get = realm
         .lookup<NativeFunction<wrapper_results_get_native_t>>("realmresults_get")
         .asFunction();      
+    wrapper_realmlist_size = realm
+        .lookup<NativeFunction<wrapper_realmlist_size_native_t>>("realmlist_size")
+        .asFunction();
+    wrapper_realmlist_get = realm
+        .lookup<NativeFunction<wrapper_realmlist_get_native_t>>("realmlist_get")
+        .asFunction();
+    wrapper_realmlist_set = realm
+        .lookup<NativeFunction<wrapper_realmlist_set_native_t>>("realmlist_set")
+        .asFunction();        
   }
 }
 
