@@ -8,6 +8,10 @@ import 'package:realm/src/dart/bindings/types.dart' as types;
 //import 'bindings/types.dart';
 
 class RealmModel {
+  bool isManaged = false;
+  Pointer<types.RealmObject> objectPointer;
+  String tableName;
+  String schemaToJson;
   // Schema String should be compatible with JS
   // example:
 //    {
@@ -18,10 +22,14 @@ class RealmModel {
 //     miles: {type: 'int', default: 0},
 //   }
 // }
-  String schemaToJson() {}
+  // String schemaToJson() {}
 
-  String tableName() {}
+  // String tableName() {}
 
-  void setNativePointer(Pointer<types.RealmObject> objectPointer) {}
+  void persist<T extends RealmModel>(T obj) {}
+
+  
+
+  // void setNativePointer(Pointer<types.RealmObject> objectPointer) {}
   
 }

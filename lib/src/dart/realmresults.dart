@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'package:realm/src/dart/bindings/bindings.dart';
 import 'package:realm/src/dart/bindings/types.dart' as types;
-//import 'package:realm/src/dart/ffi/cstring.dart';
 import 'package:realm/src/dart/realmmodel.dart';
 import 'package:realm/test/model/dog.dart';
 import "ffi/utf8.dart";
@@ -27,8 +26,8 @@ import 'dart:ffi';
 
     // T proxyInstance = realmConfiguration.newProxyInstance<T>(T); TODO use this 
     Dog$Realm dog = new Dog$Realm();
-    dog.setNativePointer(realmObjectPointer);
-
+    dog.objectPointer = realmObjectPointer;
+    
     return dog as T;
   }
 

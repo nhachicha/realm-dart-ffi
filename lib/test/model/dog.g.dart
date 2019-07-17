@@ -9,7 +9,7 @@ part of 'dog.dart';
 // import 'package:realm/src/dart/bindings/bindings.dart';
 
 class Dog$Realm extends Dog {
-  Pointer<types.RealmObject> _objectPointer;
+  // Pointer<types.RealmObject> _objectPointer;
   // // NEED to port Row interface from Java and use it as composition/mixin to access/set properties of this Object/Row
   // @Override
   // @SuppressWarnings("cast")
@@ -44,7 +44,7 @@ class Dog$Realm extends Dog {
   // String get name  => "<<___${super.name}___>>";
   String get name {
     final Pointer<Utf8> propertyNameC = Utf8.allocate("name"); //TODO cache to avoid lookup then free when object is finalized
-    final Pointer<Utf8> valueC = bindings.wrapper_object_get_string(_objectPointer, propertyNameC);
+    final Pointer<Utf8> valueC = bindings.wrapper_object_get_string(objectPointer, propertyNameC);
     String value = valueC.load<Utf8>().toString();
     valueC.free();
     return value;
@@ -53,12 +53,12 @@ class Dog$Realm extends Dog {
   set name(String newName) {
     final Pointer<Utf8> propertyNameC = Utf8.allocate("name");
     final Pointer<Utf8> valueC = Utf8.allocate(newName);
-    bindings.wrapper_object_set_string(_objectPointer, propertyNameC, valueC);
+    bindings.wrapper_object_set_string(objectPointer, propertyNameC, valueC);
     valueC.free();
   }
 
   @override
-  String schemaToJson() {
+  String get schemaToJson {
     return '''{
       name: 'Dog',
       properties: {
@@ -70,12 +70,17 @@ class Dog$Realm extends Dog {
   }
   
   @override
-  String tableName() {
+  String get tableName {
     return "Dog";
   }
 
-  @override
-  void setNativePointer(Pointer<types.RealmObject> objectPointer) {
-    _objectPointer = objectPointer;
+  // @override
+  // void setNativePointer(Pointer<types.RealmObject> objectPointer) {
+  //   _objectPointer = objectPointer;
+  // }
+
+  void persist<T extends RealmModel>(T obj) {
+    this.name = (obj as Dog).name;
+    this.age = (obj as Dog).age;
   }
 }
