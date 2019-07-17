@@ -7,10 +7,10 @@ import "ffi/utf8.dart";
 import 'dart:ffi';
 
  class RealmResults<T extends RealmModel> extends ListBase<T> {
-   //final RealmReusltsPointer _nativePointer to be passed with ctor
-   // we also need wrapper pointer to make native calls 
-   String tableName;
-   Pointer<types.RealmResults> nativePointer;
+  //final RealmReusltsPointer _nativePointer to be passed with ctor
+  // we also need wrapper pointer to make native calls
+  String tableName;
+  Pointer<types.RealmResults> nativePointer;
 
   @override
   int get length {
@@ -32,7 +32,6 @@ import 'dart:ffi';
     // T proxyInstance = realmConfiguration.newProxyInstance<T>(T); TODO use this 
     Dog$Realm dog = new Dog$Realm();
     dog.objectPointer = realmObjectPointer;
-    
     return dog as T;
   }
 
@@ -45,7 +44,4 @@ import 'dart:ffi';
   void set length(int newLength) {
     throw Exception("Modifying a RealmResults is not supported");
   }
-
-  
-  
 }

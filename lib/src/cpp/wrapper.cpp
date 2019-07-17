@@ -199,9 +199,16 @@ realm_object_t* realmresults_get(realm_results_t *realm_results_ptr, const char*
 	return obj_ptr;
 }
 
-size_t realmlist_size(realm_list_t *realm_results_ptr)
+size_t realmlist_size(realm_list_t *realm_list_ptr)
 {
-	return 0;
+	List *list = static_cast<List *>(realm_list_ptr->list);
+	return list->size();
+}
+
+void realmlist_clear(realm_list_t *realm_list_ptr)
+{
+	List *list = static_cast<List *>(realm_list_ptr->list);
+	list->delete_all();
 }
     
 realm_object_t* realmlist_get(realm_list_t *realm_results_ptr, const char* object_type, size_t index)

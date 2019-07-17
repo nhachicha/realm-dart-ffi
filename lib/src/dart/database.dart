@@ -56,7 +56,7 @@ class Realm {
   }
 
   Future<void> delete<T extends RealmModel>(T objectInstance) async {
-    bindings.wrapper_delete_object(_databasePointer, objectInstance.getNativePointer());
+    bindings.wrapper_delete_object(_databasePointer, objectInstance.objectPointer);
   }
 
   Future<RealmResults<T>> objects<T extends RealmModel>(String query) async {

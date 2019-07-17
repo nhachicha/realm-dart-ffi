@@ -48,7 +48,8 @@ extern "C"
     realm_object_t* realmresults_get(realm_results_t *realm_results_ptr, const char* object_type, size_t index);
 
     // ***********    REALM LIST   *********** //
-    size_t realmlist_size(realm_list_t *realm_results_ptr);
+    size_t realmlist_size(realm_list_t *realm_list_ptr);
+    void realmlist_clear(realm_list_t *realm_list_ptr);
     realm_object_t* realmlist_get(realm_list_t *realm_results_ptr, const char* object_type, size_t index);
     void realmlist_set(realm_list_t *realm_results_ptr, realm_object_t *obj_ptr, size_t index);
 

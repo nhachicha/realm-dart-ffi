@@ -28,7 +28,8 @@ class _RealmBindings {
   int Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_size;
   void Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_delete;
   Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, int index) wrapper_realmresults_get;  
-  int Function(Pointer<RealmList> realmresultsPointer) wrapper_realmlist_size;
+  int Function(Pointer<RealmList> realmlistPointer) wrapper_realmlist_size;
+  void Function(Pointer<RealmList> realmlistPointer) wrapper_realmlist_clear;
   Pointer<RealmObject> Function(Pointer<RealmList> nativeRealmListPointer, Pointer<Utf8> object_type, int index) wrapper_realmlist_get;
   void Function(Pointer<RealmList> nativeRealmListPointer, Pointer<RealmObject> objectPointer, int index) wrapper_realmlist_set; 
 
@@ -93,6 +94,9 @@ class _RealmBindings {
         .asFunction();      
     wrapper_realmlist_size = realm
         .lookup<NativeFunction<wrapper_realmlist_size_native_t>>("realmlist_size")
+        .asFunction();
+    wrapper_realmlist_clear = realm
+        .lookup<NativeFunction<wrapper_realmlist_clear_native_t>>("realmlist_clear")
         .asFunction();
     wrapper_realmlist_get = realm
         .lookup<NativeFunction<wrapper_realmlist_get_native_t>>("realmlist_get")
