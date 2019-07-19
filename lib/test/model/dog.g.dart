@@ -9,9 +9,8 @@ part of 'dog.dart';
 // import 'package:realm/src/dart/bindings/bindings.dart';
 
 class Dog$Realm extends Dog {
-  Pointer<types.RealmList> _othersRealmListPointer;
   Pointer<types.RealmObject> _otherRealmLinkPointer;
-  Realm realm;
+  Realm realm;  
   // Pointer<types.RealmObject> _objectPointer;
   // // NEED to port Row interface from Java and use it as composition/mixin to access/set properties of this Object/Row
   // @Override
@@ -61,23 +60,23 @@ class Dog$Realm extends Dog {
   }
 
   Dog get other {
-    // TODO cache the returned value  
-    Dog$Realm dog = Dog$Realm();
-    dog.objectPointer = _otherRealmLinkPointer;
-    return dog;
+    if (super.other == null) {
+      super.other = Dog$Realm();
+      super.other.objectPointer = _otherRealmLinkPointer;
+    }
+    return super.other;
   }
 
   RealmList<Dog> get others {
-    // TODO cache the returned value  
-    RealmList<Dog> dogs = RealmList();
-    dogs.tableName = "Dog";
-    final Pointer<Utf8> propertyNameC = Utf8.allocate("others"); //TODO cache to avoid lookup then free when object is finalized
-    final Pointer<types.RealmList> valueC = bindings.wrapper_object_get_list(objectPointer, propertyNameC);
-    dogs.nativeRealmListPointer = valueC;
-    dogs.realm = realm;
-    // valueC.free();
-    // dogs.nativeRealmListPointer = _othersRealmListPointer;
-    return dogs;
+    if (super.others == null) {
+      super.others = RealmList();
+      super.others.tableName = "Dog";
+      final Pointer<Utf8> propertyNameC = Utf8.allocate("others"); //TODO cache to avoid lookup then free when object is finalized
+      final Pointer<types.RealmList> valueC = bindings.wrapper_object_get_list(objectPointer, propertyNameC);
+      propertyNameC.free();
+      super.others.nativeRealmListPointer = valueC;
+    }
+    return super.others;
   }
 
   @override
