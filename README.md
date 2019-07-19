@@ -18,6 +18,10 @@ make
 
 ## Running 
 
+__This project requires Dart `2.5.0-dev.1.0` to run.__
+
+_on macOS you can update Dart by running `brew install dart --devel`_
+
 <!-- ### Example 
 - Run the example (from the root directory `realm-dart-ffi`)
 ```
