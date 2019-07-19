@@ -20,7 +20,7 @@ extern "C"
     void destroy(database_t *db_ptr);
 
     // ***********      REALM      *********** //
-    
+
     void begin_transaction(database_t *db_ptr);
     void commit_transaction(database_t *db_ptr);
     void cancel_transaction(database_t *db_ptr);
@@ -37,6 +37,7 @@ extern "C"
     const char* object_get_string(realm_object_t *obj_ptr, const char* property_name);
     realm_object_t* object_get_object(realm_object_t *obj_ptr, const char* property_name);
     realm_list_t* object_get_list(realm_object_t *obj_ptr, const char* property_name);
+    realm_results_t* object_get_linkingobjects(realm_object_t *obj_ptr, const char *property_name);
 
     void object_set_bool(realm_object_t *obj_ptr, const char* property_name, int8_t value);
     void object_set_int64(realm_object_t *obj_ptr, const char* property_name, int64_t value);

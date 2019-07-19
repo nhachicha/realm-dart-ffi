@@ -19,25 +19,24 @@ class Dog$Realm extends Dog {
     valueC.free();
   }
 
-  Dog get other {
-    if (super.other == null) {
+  Dog get mother {
+    if (super.mother == null) {
       // we do know the type of the object from the parent class, thx to the code gen
-      final Pointer<Utf8> propertyNameC = Utf8.allocate("other");
+      final Pointer<Utf8> propertyNameC = Utf8.allocate("mother");
       final Pointer<types.RealmObject> pointerRealmObject =
           bindings.wrapper_object_get_object(objectPointer, propertyNameC);
       if (pointerRealmObject.address != 0) { //TODO cache this lookup so we want call the C++ to check the 
                                                   // link nullability each time? how about the use case where a transaction set a new link,
                                                   // we need to invalidate all proxy caches after a commit. 
-        super.other = Dog$Realm();
-        super.other.objectPointer = pointerRealmObject;
+        super.mother = Dog$Realm();
+        super.mother.objectPointer = pointerRealmObject;
       } // else link is null
       propertyNameC.free();
     }
-    return super.other;
+    return super.mother;
   }
 
-
-  set other (Dog dog) {
+  set mother (Dog dog) {
     if (dog == null) {
       // TODO set property to null
       return;
@@ -50,7 +49,7 @@ class Dog$Realm extends Dog {
       nativePointer = managedDog.objectPointer;
     }
 
-    final Pointer<Utf8> propertyNameC = Utf8.allocate("other");
+    final Pointer<Utf8> propertyNameC = Utf8.allocate("mother");
     bindings.wrapper_object_set_object(objectPointer, propertyNameC, nativePointer);
   }
 
@@ -77,6 +76,24 @@ class Dog$Realm extends Dog {
     }
   }
 
+  RealmResults<Dog> get litter {
+    if (super.litter == null) {
+      super.litter = RealmResults();
+      super.litter.tableName = "Dog";
+      final Pointer<Utf8> propertyNameC = Utf8.allocate("litter");
+      final Pointer<types.RealmResults> pointerRealmResults =
+          bindings.wrapper_object_get_linkingobjects(objectPointer, propertyNameC);
+      propertyNameC.free();
+      super.litter.realm = realm;
+      super.litter.nativePointer = pointerRealmResults;
+    }
+    return super.litter;
+  }
+
+  set litter(RealmResults<Dog> items) {
+    throw Exception("Setting a linkingObjects property ('litter') is not supported");
+  }
+
   @override
   String get schemaToJson {
     return '''{
@@ -98,7 +115,7 @@ class Dog$Realm extends Dog {
   void persist<T extends RealmModel>(T obj) {
     this.name = (obj as Dog).name;
     this.age = (obj as Dog).age;
-    this.other = (obj as Dog).other;
+    this.mother = (obj as Dog).mother;
     this.others = (obj as Dog).others;
   }
 }

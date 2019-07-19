@@ -31,8 +31,9 @@ abstract class RealmConfiguration {
             "name": "string",
             "age": "int",
             "owner": "Person",
-            "other": "Dog",
-            "others": "Dog[]"
+            "mother": "Dog",
+            "others": "Dog[]",
+            "litter": { "type": "linkingObjects", "objectType": "Dog", "property": "mother" }
         }
     },
     {

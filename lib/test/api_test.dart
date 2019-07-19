@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:realm/src/dart/realm.dart';
+import 'package:realm/src/dart/realmresults.dart';
 import 'package:realm/test/constants.dart';
 import 'package:realm/test/model/dog.dart';
 import 'package:realm/test/model/realmmodule.dart';
@@ -106,31 +107,31 @@ void main() {
 
       List<Dog> all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
       expect(all_dogs.length, 1);
-      expect(all_dogs[0].other, null);
+      expect(all_dogs[0].mother, null);
 
       Dog dog2 = Dog()..name = "Dog2";
 
      // setting a managed dog
       await realm.beginTransaction();
       dog2 = realm.create(dog2);
-      dog1.other = dog2; 
+      dog1.mother = dog2;
       await realm.commitTransaction();
 
       all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name ASCENDING)');
       expect(all_dogs.length, 2);
       expect(all_dogs[0].name, "Dog1");
-      expect(all_dogs[0].other.name, "Dog2");
-      
+      expect(all_dogs[0].mother.name, "Dog2");
+
       // setting an unmanaged dog
       Dog dog3 = Dog()..name = "Dog3";
       await realm.beginTransaction();
-      dog1.other = dog3; 
+      dog1.mother = dog3;
       await realm.commitTransaction();
 
       all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name ASCENDING)');
       expect(all_dogs.length, 3);
       expect(all_dogs[0].name, "Dog1");
-      expect(all_dogs[0].other.name, "Dog3");
+      expect(all_dogs[0].mother.name, "Dog3");
     });
 
     test("Realm List", () async {
@@ -209,5 +210,64 @@ void main() {
       expect(dogs[2].name, "Dog2");
       expect(dogs[2].others.length, 0);
     });
+
+    test("Realm linkingObjects", () async {
+      await realm.beginTransaction();
+      Dog dog1 = realm.create<Dog>();
+      dog1.name = "Dog1";
+      await realm.commitTransaction();
+
+      List<Dog> all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
+      expect(all_dogs.length, 1);
+      expect(all_dogs[0].mother, null);
+      expect(all_dogs[0].litter.length, 0);
+
+      Dog dog2 = Dog()..name = "Dog2";
+      Dog dog3 = Dog()..name = "Dog3";
+
+      await realm.beginTransaction();
+      dog2 = realm.create(dog2);
+      dog3 = realm.create(dog3);
+      dog1.mother = dog2;
+      dog3.mother = dog2;
+      await realm.commitTransaction();
+
+      all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name ASCENDING)');
+      expect(all_dogs.length, 3);
+      expect(all_dogs[0].name, "Dog1");
+      expect(all_dogs[0].mother.name, "Dog2");
+      expect(all_dogs[0].litter.length, 0);
+      expect(all_dogs[1].name, "Dog2");
+      expect(all_dogs[1].mother, null);
+      expect(all_dogs[1].litter.length, 2);
+      expect(all_dogs[1].litter[0].name, "Dog1");
+      expect(all_dogs[1].litter[1].name, "Dog3");
+      expect(all_dogs[2].name, "Dog3");
+      expect(all_dogs[2].mother.name, "Dog2");
+      expect(all_dogs[2].litter.length, 0);
+
+      // removing a linked object updates linking objects
+      await realm.beginTransaction();
+      realm.delete(dog3);
+      await realm.commitTransaction();
+
+      all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name ASCENDING)');
+      expect(all_dogs.length, 2);
+      expect(all_dogs[0].name, "Dog1");
+      expect(all_dogs[0].mother.name, "Dog2");
+      expect(all_dogs[0].litter.length, 0);
+      expect(all_dogs[1].name, "Dog2");
+      expect(all_dogs[1].mother, null);
+      expect(all_dogs[1].litter.length, 1);
+      expect(all_dogs[1].litter[0].name, "Dog1");
+
+      // queries know about linkingObjects
+      RealmResults<Dog> dogsWithChildren = await realm.objects<Dog>('litter.@count > 0');
+      expect(dogsWithChildren.length, 1);
+      expect(dogsWithChildren[0].name, "Dog2");
+      expect(dogsWithChildren[0].litter.length, 1);
+      expect(dogsWithChildren[0].litter[0].name, "Dog1");
+    });
+
   });
 }

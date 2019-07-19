@@ -26,6 +26,7 @@ class _RealmBindings {
   void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, Pointer<RealmObject> value) wrapper_object_set_object;
   Pointer<RealmObject> Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_object;
   Pointer<RealmList> Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_list;
+  Pointer<RealmResults> Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_linkingobjects;
   void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, Pointer<Utf8> value) wrapper_object_set_string;
   Pointer<RealmResults> Function(Pointer<Database> databasePointer, Pointer<Utf8> object_type, Pointer<Utf8> query_string) wrapper_query;
   int Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_size;
@@ -93,6 +94,9 @@ class _RealmBindings {
         .asFunction();
     wrapper_object_get_list = realm
         .lookup<NativeFunction<wrapper_object_get_list_native_t>>("object_get_list")
+        .asFunction();
+    wrapper_object_get_linkingobjects = realm
+        .lookup<NativeFunction<wrapper_object_get_linkingobjects_native_t>>("object_get_linkingobjects")
         .asFunction();
     wrapper_query = realm
         .lookup<NativeFunction<wrapper_query_native_t>>("query")

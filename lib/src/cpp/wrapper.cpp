@@ -2,10 +2,11 @@
 
 #include "wrapper.h"
 #include "database.h"
-#include "impl/object_accessor_impl.hpp"
-#include "list.hpp"
 
+#include <impl/object_accessor_impl.hpp>
+#include <list.hpp>
 #include <object_store.hpp>
+
 #include <realm/group_shared.hpp>
 
 #include <realm/parser/parser.hpp>
@@ -155,6 +156,16 @@ realm_list_t* object_get_list(realm_object_t *obj_ptr, const char* property_name
 	return list_ptr;
 }
 
+realm_results_t* object_get_linkingobjects(realm_object_t *obj_ptr, const char *property_name)
+{
+	realm::Object *obj = static_cast<realm::Object *>(obj_ptr->obj);
+	realm::CppContext context(obj->realm());
+	realm::Results *value = new Results(realm::util::any_cast<realm::Results>(obj->get_property_value<util::Any>(context, property_name)));
+	realm_results_t *results_ptr = new realm_results_t();
+	results_ptr->results = value;
+	return results_ptr;
+}
+
 template <typename ValueType>
 void object_set_value(realm_object_t *obj_ptr, const char *property_name, ValueType value)
 {
@@ -195,12 +206,11 @@ realm_results_t* query(database_t *db_ptr, const char *object_type, const char* 
 	Query query = table.where();
 
 	realm::query_builder::NoArguments args;
-
 	parser::ParserResult res = realm::parser::parse(query_string);
-	realm::query_builder::apply_predicate(query, res.predicate, args);
+	realm::query_builder::apply_predicate(query, res.predicate, args, db->getKeyPathMappings());
 
 	Results* results = new Results(db->realm(), query);
-	
+
 	realm_results_t *results_ptr;
 	results_ptr = (typeof(results_ptr))malloc(sizeof(*results_ptr));
 	results_ptr->results = results;

@@ -40,6 +40,8 @@ typedef wrapper_object_set_object_native_t = Void Function(Pointer<RealmObject> 
 
 typedef wrapper_object_get_list_native_t = Pointer<RealmList> Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName);
 
+typedef wrapper_object_get_linkingobjects_native_t = Pointer<RealmResults> Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName);
+
 typedef wrapper_query_native_t = Pointer<RealmResults> Function(Pointer<Database> databasePointer, Pointer<Utf8> object_type, Pointer<Utf8> query_string);
 
 typedef wrapper_results_size_native_t = Uint64 Function(Pointer<RealmResults> realmresultsPointer);
