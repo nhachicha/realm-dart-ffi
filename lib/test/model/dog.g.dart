@@ -1,11 +1,4 @@
 part of 'dog.dart';
-// import 'package:realm/src/dart/bindings/bindings.dart';
-// import 'package:realm/src/dart/bindings/types.dart';
-// export 'package:realm/src/dart/ffi/cstring.dart' show CString;
-
-// import 'package:realm/src/dart/bindings/types.dart';
-// import 'package:realm/src/dart/bindings/bindings.dart';
-// import 'package:realm/src/dart/bindings/bindings.dart';
 
 class Dog$Realm extends Dog {
 
@@ -45,6 +38,10 @@ class Dog$Realm extends Dog {
 
 
   set other (Dog dog) {
+    if (dog == null) {
+      // TODO set property to null
+      return;
+    }
     Pointer<types.RealmObject> nativePointer;
     if (dog.isManaged) {
       nativePointer = dog.objectPointer;
@@ -72,8 +69,12 @@ class Dog$Realm extends Dog {
     return super.others;
   }
 
-  set others(RealmList<Dog> newList) {
-    throw Exception("Not supported in managed mode"); //TODO add test case
+  set others(RealmList<Dog> dogs) {
+    // clear & add all elements
+    bindings.wrapper_realmlist_clear(this.others.nativeRealmListPointer);
+    if (dogs != null) {
+      this.others.addAll(dogs);
+    }
   }
 
   @override
@@ -97,5 +98,7 @@ class Dog$Realm extends Dog {
   void persist<T extends RealmModel>(T obj) {
     this.name = (obj as Dog).name;
     this.age = (obj as Dog).age;
+    this.other = (obj as Dog).other;
+    this.others = (obj as Dog).others;
   }
 }
