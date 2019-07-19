@@ -98,6 +98,41 @@ void main() {
       expect(dogs.length, 0);
     });
 
+    test("Realm Link", () async {
+      await realm.beginTransaction();
+      Dog dog1 = realm.create<Dog>();
+      dog1.name = "Dog1";
+      await realm.commitTransaction();
+
+      List<Dog> all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
+      expect(all_dogs.length, 1);
+      expect(all_dogs[0].other, null);
+
+      Dog dog2 = Dog()..name = "Dog2";
+
+     // setting a managed dog
+      await realm.beginTransaction();
+      dog2 = realm.create(dog2);
+      dog1.other = dog2; 
+      await realm.commitTransaction();
+
+      all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name ASCENDING)');
+      expect(all_dogs.length, 2);
+      expect(all_dogs[0].name, "Dog1");
+      expect(all_dogs[0].other.name, "Dog2");
+      
+      // setting an unmanaged dog
+      Dog dog3 = Dog()..name = "Dog3";
+      await realm.beginTransaction();
+      dog1.other = dog3; 
+      await realm.commitTransaction();
+
+      all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name ASCENDING)');
+      expect(all_dogs.length, 3);
+      expect(all_dogs[0].name, "Dog1");
+      expect(all_dogs[0].other.name, "Dog3");
+    });
+
     test("Realm List", () async {
       await realm.beginTransaction();
       Dog dog = realm.create<Dog>();

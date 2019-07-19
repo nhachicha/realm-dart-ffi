@@ -35,12 +35,14 @@ extern "C"
     int64_t object_get_int64(realm_object_t *obj_ptr, const char* property_name);
     double object_get_double(realm_object_t *obj_ptr, const char* property_name);
     const char* object_get_string(realm_object_t *obj_ptr, const char* property_name);
+    realm_object_t* object_get_object(realm_object_t *obj_ptr, const char* property_name);
     realm_list_t* object_get_list(realm_object_t *obj_ptr, const char* property_name);
 
     void object_set_bool(realm_object_t *obj_ptr, const char* property_name, int8_t value);
     void object_set_int64(realm_object_t *obj_ptr, const char* property_name, int64_t value);
     void object_set_double(realm_object_t *obj_ptr, const char* property_name, double value);
     void object_set_string(realm_object_t *obj_ptr, const char* property_name, const char* value);
+    void object_set_object(realm_object_t *obj_ptr, const char* property_name, realm_object_t *value);
 
     // ***********       QUERY     *********** //
     realm_results_t* query(database_t *db_ptr, const char *object_type, const char* query);

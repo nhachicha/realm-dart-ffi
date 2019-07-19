@@ -49,6 +49,8 @@ class Realm {
     objectTypeC.free();
 
     proxyInstance.objectPointer = objectPointer;
+    proxyInstance.realm = this;
+    
     if(obj != null) {
       proxyInstance.persist(obj);
     }
@@ -59,7 +61,7 @@ class Realm {
     bindings.wrapper_delete_object(_databasePointer, objectInstance.objectPointer);
   }
 
-  Future<RealmResults<T>> objects<T extends RealmModel>(String query) async {
+  Future<RealmResults<T>> objects<T extends RealmModel>(String query) async {//TODO make query optional, so passing nothing ie equivalent to findAll
     // create RealmResults which holds the query results
     RealmResults<T> realmresultsInstance = realmConfiguration.newRealmResultsInstance<T>(T);
 

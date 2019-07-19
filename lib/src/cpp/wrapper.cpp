@@ -128,6 +128,23 @@ const char *object_get_string(realm_object_t *obj_ptr, const char *property_name
 	return data;
 }
 
+realm_object_t* object_get_object(realm_object_t *obj_ptr, const char* property_name)
+{
+	realm::Object *obj = static_cast<realm::Object *>(obj_ptr->obj);
+	realm::CppContext context(obj->realm());
+
+	util::Any property_value = obj->get_property_value<util::Any>(context, property_name);
+	if (property_value.has_value()) {
+		realm::Object* objectLink = new realm::Object(realm::util::any_cast<realm::Object>(property_value));
+
+		realm_object_t *object_ptr = new realm_object_t();
+		object_ptr->obj = objectLink;
+		return object_ptr;
+	} else {
+		return nullptr;
+	}
+}
+
 realm_list_t* object_get_list(realm_object_t *obj_ptr, const char* property_name)
 {
 	realm::Object *obj = static_cast<realm::Object *>(obj_ptr->obj);
@@ -164,6 +181,11 @@ void object_set_double(realm_object_t *obj_ptr, const char *property_name, doubl
 void object_set_string(realm_object_t *obj_ptr, const char *property_name, const char *value)
 {
 	object_set_value(obj_ptr, property_name, util::Any(std::string(value)));
+}
+
+void object_set_object(realm_object_t *obj_ptr, const char* property_name, realm_object_t *value)
+{
+	object_set_value(obj_ptr, property_name, util::Any(*static_cast<realm::Object *>(value->obj)));//TODO should we call is_valid(); for any Object passed?
 }
 
 realm_results_t* query(database_t *db_ptr, const char *object_type, const char* query_string)
