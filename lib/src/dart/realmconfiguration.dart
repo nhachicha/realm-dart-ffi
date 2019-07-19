@@ -30,7 +30,9 @@ abstract class RealmConfiguration {
         "properties": {
             "name": "string",
             "age": "int",
-            "owner": "Person"
+            "owner": "Person",
+            "other": "Dog",
+            "others": "Dog[]"
         }
     },
     {

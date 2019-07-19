@@ -13,10 +13,48 @@ import 'dart:ffi';
    String tableName;
    Pointer<types.RealmList> nativeRealmListPointer;
    Realm realm;
-     
+
   @override
   int get length {
     return bindings.wrapper_realmlist_size(nativeRealmListPointer);
+  }
+
+  @override
+  void add(T value) {
+    Pointer<types.RealmObject> nativePointer;
+    if (value.isManaged) {
+      nativePointer = value.objectPointer;
+    } else {
+      // persist recursively the object
+      T persisted = realm.create<T>(value);
+      // persist values
+      nativePointer = persisted.objectPointer;
+    }
+    bindings.wrapper_realmlist_insert(nativeRealmListPointer, nativePointer, length);
+  }
+
+  @override
+  void insert(int index, T item) {
+    ArgumentError.checkNotNull(index, "index");
+    RangeError.checkValueInInterval(index, 0, length, "index");
+    bindings.wrapper_realmlist_insert(nativeRealmListPointer, item.objectPointer, index);
+  }
+
+  @override
+  T removeAt(int index) {
+    ArgumentError.checkNotNull(index, "index");
+    RangeError.checkValueInInterval(index, 0, length - 1, "index");
+    T removed = this[index];
+    bindings.wrapper_realmlist_erase(nativeRealmListPointer, index);
+    return removed;
+  }
+
+  @override
+  void clear() {
+    if (length == 0) {
+      return;
+    }
+    bindings.wrapper_realmlist_clear(nativeRealmListPointer);
   }
 
   @override
@@ -40,7 +78,7 @@ import 'dart:ffi';
       nativePointer = value.objectPointer;
     } else {
       // persist recursively the object 
-      T persisted = realm.create<T>(value) as T;
+      T persisted = realm.create<T>(value);
       // persiste values
       nativePointer = persisted.objectPointer;
     }
@@ -54,11 +92,7 @@ import 'dart:ffi';
 
   @override
   void set length(int newLength) {
-    throw Exception("Modifying length is not supported");// THIS could also be a no-op
+    throw Exception("Modifying length is not supported"); // Realm list items cannot be null
     
   }
-
-
-  
-  
 }

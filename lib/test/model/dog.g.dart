@@ -71,7 +71,12 @@ class Dog$Realm extends Dog {
     // TODO cache the returned value  
     RealmList<Dog> dogs = RealmList();
     dogs.tableName = "Dog";
-    dogs.nativeRealmListPointer = _othersRealmListPointer;
+    final Pointer<Utf8> propertyNameC = Utf8.allocate("others"); //TODO cache to avoid lookup then free when object is finalized
+    final Pointer<types.RealmList> valueC = bindings.wrapper_object_get_list(objectPointer, propertyNameC);
+    dogs.nativeRealmListPointer = valueC;
+    dogs.realm = realm;
+    // valueC.free();
+    // dogs.nativeRealmListPointer = _othersRealmListPointer;
     return dogs;
   }
 

@@ -23,12 +23,15 @@ class _RealmBindings {
   double Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_double;
   void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, double value) wrapper_object_set_double;
   Pointer<Utf8> Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_string;
+  Pointer<RealmList> Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName) wrapper_object_get_list;
   void Function(Pointer<RealmObject> objectPointer, Pointer<Utf8> propertyName, Pointer<Utf8> value) wrapper_object_set_string;
   Pointer<RealmResults> Function(Pointer<Database> databasePointer, Pointer<Utf8> object_type, Pointer<Utf8> query_string) wrapper_query;
   int Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_size;
   void Function(Pointer<RealmResults> realmresultsPointer) wrapper_realmresults_delete;
   Pointer<RealmObject> Function(Pointer<RealmResults> realmresultsPointer, Pointer<Utf8> object_type, int index) wrapper_realmresults_get;  
   int Function(Pointer<RealmList> realmlistPointer) wrapper_realmlist_size;
+  void Function(Pointer<RealmList> realmlistPointer, Pointer<RealmObject> objectPointer, int index) wrapper_realmlist_insert;
+  void Function(Pointer<RealmList> realmlistPointer, int index) wrapper_realmlist_erase;
   void Function(Pointer<RealmList> realmlistPointer) wrapper_realmlist_clear;
   Pointer<RealmObject> Function(Pointer<RealmList> nativeRealmListPointer, Pointer<Utf8> object_type, int index) wrapper_realmlist_get;
   void Function(Pointer<RealmList> nativeRealmListPointer, Pointer<RealmObject> objectPointer, int index) wrapper_realmlist_set; 
@@ -73,13 +76,16 @@ class _RealmBindings {
         .asFunction();
     wrapper_object_set_double = realm
         .lookup<NativeFunction<wrapper_object_set_double_native_t>>("object_set_double")
-        .asFunction();        
+        .asFunction();
     wrapper_object_get_string = realm
         .lookup<NativeFunction<wrapper_object_get_string_native_t>>("object_get_string")
         .asFunction();
     wrapper_object_set_string = realm
         .lookup<NativeFunction<wrapper_object_set_string_native_t>>("object_set_string")
-        .asFunction();        
+        .asFunction();
+    wrapper_object_get_list = realm
+        .lookup<NativeFunction<wrapper_object_get_list_native_t>>("object_get_list")
+        .asFunction();
     wrapper_query = realm
         .lookup<NativeFunction<wrapper_query_native_t>>("query")
         .asFunction();
@@ -91,12 +97,18 @@ class _RealmBindings {
         .asFunction();
     wrapper_realmresults_get = realm
         .lookup<NativeFunction<wrapper_results_get_native_t>>("realmresults_get")
-        .asFunction();      
+        .asFunction();
     wrapper_realmlist_size = realm
         .lookup<NativeFunction<wrapper_realmlist_size_native_t>>("realmlist_size")
         .asFunction();
     wrapper_realmlist_clear = realm
         .lookup<NativeFunction<wrapper_realmlist_clear_native_t>>("realmlist_clear")
+        .asFunction();
+    wrapper_realmlist_insert = realm
+        .lookup<NativeFunction<wrapper_realmlist_insert_native_t>>("realmlist_insert")
+        .asFunction();
+    wrapper_realmlist_erase = realm
+        .lookup<NativeFunction<wrapper_realmlist_erase_native_t>>("realmlist_erase")
         .asFunction();
     wrapper_realmlist_get = realm
         .lookup<NativeFunction<wrapper_realmlist_get_native_t>>("realmlist_get")

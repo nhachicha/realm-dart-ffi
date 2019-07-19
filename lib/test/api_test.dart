@@ -28,7 +28,7 @@ void main() {
 
     test("Create Object", () async {
       await realm.beginTransaction();
-      Dog dog = await realm.create<Dog>();
+      Dog dog = realm.create<Dog>();
       dog.name = "Akamaru";
       await realm.commitTransaction();
 
@@ -41,7 +41,7 @@ void main() {
       ..age = 7
       ..name = "Akamaru";
 
-      Dog managedDog = await realm.create<Dog>(dog);
+      Dog managedDog = realm.create<Dog>(dog);
       await realm.commitTransaction();
 
       expect(managedDog.name, "Akamaru");
@@ -50,7 +50,7 @@ void main() {
     
     test("Query Object", () async {
       await realm.beginTransaction();
-      Dog dog = await realm.create<Dog>();
+      Dog dog = realm.create<Dog>();
       dog.name = "Akamaru";
       await realm.commitTransaction();
 
@@ -61,7 +61,7 @@ void main() {
 
     test("Delete Object", () async {
       await realm.beginTransaction();
-      Dog dog = await realm.create<Dog>();
+      Dog dog = realm.create<Dog>();
       dog.name = "Akamaru";
       await realm.commitTransaction();
 
@@ -79,9 +79,9 @@ void main() {
 
     test("Delete Results", () async {
       await realm.beginTransaction();
-      Dog dog = await realm.create<Dog>();
+      Dog dog = realm.create<Dog>();
       dog.name = "Akamaru";
-      Dog dog2 = await realm.create<Dog>();
+      Dog dog2 = realm.create<Dog>();
       dog2.name = "Charlie";
       await realm.commitTransaction();
 
@@ -100,21 +100,79 @@ void main() {
 
     test("Realm List", () async {
       await realm.beginTransaction();
-      Dog dog = await realm.create<Dog>();
+      Dog dog = realm.create<Dog>();
       dog.name = "Akamaru";
       await realm.commitTransaction();
 
-      List<Dog> dogs = await realm.objects<Dog>('name = "Akamaru"');
+      List<Dog> dogs = await realm.objects<Dog>('name = "Akamaru" SORT(name DESCENDING)');
       expect(dogs.length, 1);
+      expect(dogs[0].name, "Akamaru");
+      expect(dogs[0].others.length, 0);
+
       Dog dog1 = Dog()..name = "Dog1";
       Dog dog2 = Dog()..name = "Dog2";
 
+      // add unmanaged objects
       await realm.beginTransaction();
       dogs[0].others.add(dog1);
       dogs[0].others.add(dog2);
       await realm.commitTransaction();
 
-      expect(dogs[0].others.length, 2);//TODO add query by others
+      expect(dogs[0].others.length, 2);
+
+      dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
+      expect(dogs.length, 3); // unmanaged objects added to a list are now persisted
+      expect(dogs[0].name, "Akamaru");
+      expect(dogs[0].others.length, 2);
+      expect(dogs[0].others[0].name, "Dog1");
+      expect(dogs[0].others[1].name, "Dog2");
+      expect(dogs[1].name, "Dog1");
+      expect(dogs[1].others.length, 0);
+      expect(dogs[2].name, "Dog2");
+      expect(dogs[2].others.length, 0);
+
+      // insert at arbitrary index
+      await realm.beginTransaction();
+      dogs[0].others.insert(1, dog); // self reference
+      await realm.commitTransaction();
+
+      dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
+      expect(dogs.length, 3);
+      expect(dogs[0].name, "Akamaru");
+      expect(dogs[0].others.length, 3);
+      expect(dogs[0].others[0].name, "Dog1");
+      expect(dogs[0].others[1].name, "Akamaru");
+      expect(dogs[0].others[2].name, "Dog2");
+
+      // remove from arbitrary position
+      await realm.beginTransaction();
+      dogs[0].others.removeAt(1);
+      await realm.commitTransaction();
+
+      dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
+      expect(dogs.length, 3); // objects still exist, only the list has been modified
+      expect(dogs[0].name, "Akamaru");
+      expect(dogs[0].others.length, 2);
+      expect(dogs[0].others[0].name, "Dog1");
+      expect(dogs[0].others[1].name, "Dog2");
+      expect(dogs[1].name, "Dog1");
+      expect(dogs[1].others.length, 0);
+      expect(dogs[2].name, "Dog2");
+      expect(dogs[2].others.length, 0);
+
+      // clear list
+      await realm.beginTransaction();
+      dogs[0].others.clear();
+      await realm.commitTransaction();
+
+      dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
+      expect(dogs.length, 3); // objects still exist, only the list has been modified
+      expect(dogs[0].name, "Akamaru");
+      expect(dogs[0].others.length, 0);
+      expect(dogs[1].name, "Dog1");
+      expect(dogs[1].others.length, 0);
+      expect(dogs[2].name, "Dog2");
+      expect(dogs[2].others.length, 0);
     });
   });
 }

@@ -3,6 +3,7 @@
 #include "wrapper.h"
 #include "database.h"
 #include "impl/object_accessor_impl.hpp"
+#include "list.hpp"
 
 #include <object_store.hpp>
 #include <realm/group_shared.hpp>
@@ -127,6 +128,16 @@ const char *object_get_string(realm_object_t *obj_ptr, const char *property_name
 	return data;
 }
 
+realm_list_t* object_get_list(realm_object_t *obj_ptr, const char* property_name)
+{
+	realm::Object *obj = static_cast<realm::Object *>(obj_ptr->obj);
+	realm::CppContext context(obj->realm());
+	realm::List *value = new List(realm::util::any_cast<realm::List>(obj->get_property_value<util::Any>(context, property_name)));
+	realm_list_t *list_ptr = new realm_list_t();
+	list_ptr->list = value;
+	return list_ptr;
+}
+
 template <typename ValueType>
 void object_set_value(realm_object_t *obj_ptr, const char *property_name, ValueType value)
 {
@@ -193,7 +204,7 @@ realm_object_t* realmresults_get(realm_results_t *realm_results_ptr, const char*
 	Object *obj = new Object(results->get_realm(), *results->get_realm()->schema().find(object_type), row);
 
 	realm_object_t *obj_ptr;
-	obj_ptr = (typeof(obj_ptr))malloc(sizeof(*obj_ptr)); 
+	obj_ptr = (typeof(obj_ptr))malloc(sizeof(*obj_ptr));
 	obj_ptr->obj = obj;
 
 	return obj_ptr;
@@ -208,15 +219,38 @@ size_t realmlist_size(realm_list_t *realm_list_ptr)
 void realmlist_clear(realm_list_t *realm_list_ptr)
 {
 	List *list = static_cast<List *>(realm_list_ptr->list);
-	list->delete_all();
-}
-    
-realm_object_t* realmlist_get(realm_list_t *realm_results_ptr, const char* object_type, size_t index)
-{
-	return nullptr;
+	list->remove_all();
 }
 
-void realmlist_set(realm_list_t *realm_results_ptr, realm_object_t *obj_ptr, size_t index)
+void realmlist_insert(realm_list_t *realm_list_ptr, realm_object_t *obj_ptr, size_t index)
 {
+	List *list = static_cast<List *>(realm_list_ptr->list);
+	realm::Object *obj = static_cast<realm::Object *>(obj_ptr->obj);
+	list->insert(index, obj->row());
+}
 
+void realmlist_erase(realm_list_t *realm_list_ptr, size_t index)
+{
+	List *list = static_cast<List *>(realm_list_ptr->list);
+	list->remove(index);
+}
+
+realm_object_t* realmlist_get(realm_list_t *realm_list_ptr, const char* object_type, size_t index)
+{
+	List *list = static_cast<List *>(realm_list_ptr->list);
+	auto row =  list->get(index);
+	Object *obj = new Object(list->get_realm(), *list->get_realm()->schema().find(object_type), row);
+
+	realm_object_t *obj_ptr;
+	obj_ptr = (typeof(obj_ptr))malloc(sizeof(*obj_ptr));
+	obj_ptr->obj = obj;
+
+	return obj_ptr;
+}
+
+void realmlist_set(realm_list_t *realm_list_ptr, realm_object_t *obj_ptr, size_t index)
+{
+	List *list = static_cast<List *>(realm_list_ptr->list);
+	realm::Object *obj = static_cast<realm::Object *>(obj_ptr->obj);
+	list->set(index, obj->row());
 }

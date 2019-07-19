@@ -35,6 +35,7 @@ extern "C"
     int64_t object_get_int64(realm_object_t *obj_ptr, const char* property_name);
     double object_get_double(realm_object_t *obj_ptr, const char* property_name);
     const char* object_get_string(realm_object_t *obj_ptr, const char* property_name);
+    realm_list_t* object_get_list(realm_object_t *obj_ptr, const char* property_name);
 
     void object_set_bool(realm_object_t *obj_ptr, const char* property_name, int8_t value);
     void object_set_int64(realm_object_t *obj_ptr, const char* property_name, int64_t value);
@@ -50,8 +51,10 @@ extern "C"
     // ***********    REALM LIST   *********** //
     size_t realmlist_size(realm_list_t *realm_list_ptr);
     void realmlist_clear(realm_list_t *realm_list_ptr);
-    realm_object_t* realmlist_get(realm_list_t *realm_results_ptr, const char* object_type, size_t index);
-    void realmlist_set(realm_list_t *realm_results_ptr, realm_object_t *obj_ptr, size_t index);
+    void realmlist_insert(realm_list_t *realm_list_ptr, realm_object_t *obj_ptr, size_t index);
+    void realmlist_erase(realm_list_t *realm_list_ptr, size_t index);
+    realm_object_t* realmlist_get(realm_list_t *realm_list_ptr, const char* object_type, size_t index);
+    void realmlist_set(realm_list_t *realm_list_ptr, realm_object_t *obj_ptr, size_t index);
 
 
 #ifdef __cplusplus
