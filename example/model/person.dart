@@ -1,4 +1,4 @@
-//import 'package:realm/src/dart/realmmodel.dart';
+//import 'package:realm/src/dart/realm_model.dart';
 //
 //import 'dog.dart';
 //

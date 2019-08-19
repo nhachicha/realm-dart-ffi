@@ -1,5 +1,4 @@
-// annotation 
-import 'package:realm/src/dart/realmmodel.dart';
+import 'package:realm/src/dart/realm_model.dart';
 
 class RealmSchema<T extends RealmModel> {
   final String path;

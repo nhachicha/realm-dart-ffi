@@ -1,1 +1,1 @@
-const realm_test_directory = "/Users/Nabil/Dev/realm/realm-dart-ffi/lib/test/realms/";
+const realmTestDirectory = './lib/test/realms/';

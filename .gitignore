@@ -138,3 +138,8 @@ doc/api/
 
 # End of https://www.gitignore.io/api/c++,dart,cmake,flutter,visualstudiocode
 
+# Ignore Mac DS_Store files
+.DS_Store
+
+# Ignore realm test data
+lib/test/realms/
