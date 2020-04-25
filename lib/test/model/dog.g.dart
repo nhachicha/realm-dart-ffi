@@ -3,27 +3,28 @@ part of 'dog.dart';
 class Dog$Realm extends Dog {
 
   String get name {
-    final Pointer<Utf8> propertyNameC = Utf8.allocate(
+    final propertyNameC = Utf8.toUtf8(
         "name"); //TODO cache to avoid lookup then free when object is finalized
-    final Pointer<Utf8> valueC =
+    final valueC =
         bindings.wrapper_object_get_string(objectPointer, propertyNameC);
-    String value = valueC.load<Utf8>().toString();
-    valueC.free();
+    //String value = valueC.load<Utf8>().toString();
+    String value = valueC.ref.toString();
+    free(valueC);
     return value;
   }
 
   set name(String newName) {
-    final Pointer<Utf8> propertyNameC = Utf8.allocate("name");
-    final Pointer<Utf8> valueC = Utf8.allocate(newName);
+    final propertyNameC = Utf8.toUtf8("name");
+    final valueC = Utf8.toUtf8(newName);
     bindings.wrapper_object_set_string(objectPointer, propertyNameC, valueC);
-    valueC.free();
+    free(valueC);
   }
 
   Dog get mother {
     if (super.mother == null) {
       // we do know the type of the object from the parent class, thx to the code gen
-      final Pointer<Utf8> propertyNameC = Utf8.allocate("mother");
-      final Pointer<types.RealmObject> pointerRealmObject =
+      final propertyNameC = Utf8.toUtf8("mother");
+      final Pointer<RealmObjectType> pointerRealmObject =
           bindings.wrapper_object_get_object(objectPointer, propertyNameC);
       if (pointerRealmObject.address != 0) { //TODO cache this lookup so we want call the C++ to check the 
                                                   // link nullability each time? how about the use case where a transaction set a new link,
@@ -31,7 +32,7 @@ class Dog$Realm extends Dog {
         super.mother = Dog$Realm();
         super.mother.objectPointer = pointerRealmObject;
       } // else link is null
-      propertyNameC.free();
+      free(propertyNameC);
     }
     return super.mother;
   }
@@ -41,7 +42,7 @@ class Dog$Realm extends Dog {
       // TODO set property to null
       return;
     }
-    Pointer<types.RealmObject> nativePointer;
+    Pointer<RealmObjectType> nativePointer;
     if (dog.isManaged) {
       nativePointer = dog.objectPointer;
     } else {
@@ -49,7 +50,7 @@ class Dog$Realm extends Dog {
       nativePointer = managedDog.objectPointer;
     }
 
-    final Pointer<Utf8> propertyNameC = Utf8.allocate("mother");
+    final propertyNameC = Utf8.toUtf8("mother");
     bindings.wrapper_object_set_object(objectPointer, propertyNameC, nativePointer);
   }
 
@@ -57,11 +58,11 @@ class Dog$Realm extends Dog {
     if (super.others == null) {
       super.others = RealmList();
       super.others.tableName = "Dog";
-      final Pointer<Utf8> propertyNameC = Utf8.allocate(
+      final propertyNameC = Utf8.toUtf8(
           "others"); //TODO cache to avoid lookup then free when object is finalized
-      final Pointer<types.RealmList> pointerRealmList =
+      final Pointer<RealmListType> pointerRealmList =
           bindings.wrapper_object_get_list(objectPointer, propertyNameC);
-      propertyNameC.free();
+      free(propertyNameC);
       super.others.realm = realm;
       super.others.nativeRealmListPointer = pointerRealmList;
     }
@@ -80,10 +81,10 @@ class Dog$Realm extends Dog {
     if (super.litter == null) {
       super.litter = RealmResults();
       super.litter.tableName = "Dog";
-      final Pointer<Utf8> propertyNameC = Utf8.allocate("litter");
-      final Pointer<types.RealmResults> pointerRealmResults =
+      final propertyNameC = Utf8.toUtf8("litter");
+      final Pointer<RealmResultsType> pointerRealmResults =
           bindings.wrapper_object_get_linkingobjects(objectPointer, propertyNameC);
-      propertyNameC.free();
+      free(propertyNameC);
       super.litter.realm = realm;
       super.litter.nativePointer = pointerRealmResults;
     }

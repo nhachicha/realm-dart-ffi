@@ -5,20 +5,20 @@ import 'package:realm/src/dart/realmmodel.dart';
 import 'package:realm/src/dart/realmconfiguration.dart';
 import 'package:realm/src/dart/realmresults.dart';
 import 'package:realm/src/dart/bindings/bindings.dart';
-import 'package:realm/src/dart/ffi/utf8.dart';
+import "package:ffi/ffi.dart";
 
 class Realm {
   RealmConfiguration realmConfiguration; // to be injected with the one generated at compile time
-  Pointer<types.Database> _databasePointer;
+  Pointer<types.DatabaseType> _databasePointer;
 
   Future<void> open() async {
-    final Pointer<Utf8> pathC = Utf8.allocate(realmConfiguration.path());
-    final Pointer<Utf8> schemaC = Utf8.allocate(realmConfiguration.getSchemaAsJSON());
+    final pathC = Utf8.toUtf8(realmConfiguration.path());
+    final schemaC = Utf8.toUtf8(realmConfiguration.getSchemaAsJSON());
 
     _databasePointer = bindings.wrapper_create(pathC, schemaC);
 
-    pathC.free();
-    schemaC.free();
+    free(pathC);
+    free(schemaC);
   }
 
   Future<void> close() async {
@@ -44,9 +44,9 @@ class Realm {
   T create<T extends RealmModel>([T obj]) {
     T proxyInstance = realmConfiguration.newProxyInstance<T>(T);
 
-    final Pointer<Utf8> objectTypeC = Utf8.allocate(proxyInstance.tableName);
-    Pointer<types.RealmObject> objectPointer = bindings.wrapper_add_object(_databasePointer, objectTypeC);
-    objectTypeC.free();
+    final Pointer<Utf8> objectTypeC = Utf8.toUtf8(proxyInstance.tableName);
+    Pointer<types.RealmObjectType> objectPointer = bindings.wrapper_add_object(_databasePointer, objectTypeC);
+    free(objectTypeC);
 
     proxyInstance.objectPointer = objectPointer;
     proxyInstance.realm = this;
@@ -65,12 +65,12 @@ class Realm {
     // create RealmResults which holds the query results
     RealmResults<T> realmresultsInstance = realmConfiguration.newRealmResultsInstance<T>(T);
 
-    final Pointer<Utf8> objectTypeC = Utf8.allocate(realmresultsInstance.tableName);
-    final Pointer<Utf8> queryC = Utf8.allocate(query);
+    final objectTypeC = Utf8.toUtf8(realmresultsInstance.tableName);
+    final queryC = Utf8.toUtf8(query);
     realmresultsInstance.nativePointer = bindings.wrapper_query(_databasePointer, objectTypeC, queryC);
     realmresultsInstance.realm = this;
-    objectTypeC.free();
-    queryC.free();
+    free(objectTypeC);
+    free(queryC);
 
     return realmresultsInstance;
   }

@@ -2,16 +2,16 @@
 import 'dart:ffi';
 import 'package:realm/src/dart/bindings/types.dart' as types;
 import 'package:realm/src/dart/database.dart';
-// import "bindings/types.dart";
-// import 'package:realm/src/dart/bindings/bindings.dart';
-// import 'package:realm/src/dart/realm.dart';
 
-//import 'bindings/types.dart';
+
+export 'dart:ffi';
+export 'package:realm/src/dart/bindings/bindings.dart';
+export 'package:realm/src/dart/bindings/types.dart';
 
 class RealmModel {
   bool isManaged = false;
   Realm realm;
-  Pointer<types.RealmObject> objectPointer;
+  Pointer<types.RealmObjectType> objectPointer;
   String tableName;
   String schemaToJson;
 

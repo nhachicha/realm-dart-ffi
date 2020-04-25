@@ -5,6 +5,11 @@ This demo wraps the [Realm](https://realm.io/) database [engine](https://github.
 
 ## Building 
 
+Note: to experiment with callbacks specify the location of the Dart header in `lib/src/cpp/CMakeLists.txt`
+```
+include_directories(/Users/nabil/Dev/flutter/bin/cache/dart-sdk/include)
+```
+
 - Build the Shared Object library containing Realm with a C wrapper
 
 ```

@@ -1,17 +1,17 @@
 import 'dart:collection';
 import 'package:realm/src/dart/bindings/bindings.dart';
-import 'package:realm/src/dart/bindings/types.dart' as types;
+import 'package:realm/src/dart/bindings/types.dart';
 import 'package:realm/src/dart/realm.dart';
 import 'package:realm/src/dart/realmmodel.dart';
 import 'package:realm/test/model/dog.dart';
-import "ffi/utf8.dart";
+import "package:ffi/ffi.dart";
 import 'dart:ffi';
 
  class RealmList<T extends RealmModel> extends ListBase<T> {
    //final RealmReusltsPointer _nativePointer to be passed with ctor
    // we also need wrapper pointer to make native calls 
    String tableName;
-   Pointer<types.RealmList> nativeRealmListPointer;
+   Pointer<RealmListType> nativeRealmListPointer;
    Realm realm;
 
   @override
@@ -21,7 +21,7 @@ import 'dart:ffi';
 
   @override
   void add(T value) {
-    Pointer<types.RealmObject> nativePointer;
+    Pointer<RealmObjectType> nativePointer;
     if (value.isManaged) {
       nativePointer = value.objectPointer;
     } else {
@@ -60,9 +60,9 @@ import 'dart:ffi';
   @override
   T operator [](int index) {
     // get native pointer & invoke the wrapper 
-    final Pointer<Utf8> tableNameC = Utf8.allocate(tableName);
-    Pointer<types.RealmObject> realmObjectPointer = bindings.wrapper_realmlist_get(nativeRealmListPointer, tableNameC, index);
-    tableNameC.free();
+    final tableNameC = Utf8.toUtf8(tableName);
+    Pointer<RealmObjectType> realmObjectPointer = bindings.wrapper_realmlist_get(nativeRealmListPointer, tableNameC, index);
+    free(tableNameC);
 
     // T proxyInstance = realmConfiguration.newProxyInstance<T>(T); TODO use this 
     Dog$Realm dog = new Dog$Realm();
@@ -73,7 +73,7 @@ import 'dart:ffi';
 
   @override
   void operator []=(int index, T value) {
-    Pointer<types.RealmObject> nativePointer;
+    Pointer<RealmObjectType> nativePointer;
     if (value.isManaged) {
       nativePointer = value.objectPointer;
     } else {
@@ -82,9 +82,9 @@ import 'dart:ffi';
       // persiste values
       nativePointer = persisted.objectPointer;
     }
-    final Pointer<Utf8> tableNameC = Utf8.allocate(tableName);
+    final tableNameC = Utf8.toUtf8(tableName);
     bindings.wrapper_realmlist_set(nativeRealmListPointer, nativePointer, index);
-    tableNameC.free();
+    free(tableNameC);
     //us the object pointer to set the list at the index position 
     // should be in a transaction either assign the pointer to the list or persist it first 
 

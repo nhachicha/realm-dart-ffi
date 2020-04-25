@@ -1,11 +1,48 @@
 import 'dart:io';
 
+import 'package:realm/src/dart/bindings/bindings.dart';
 import 'package:realm/src/dart/realm.dart';
 import 'package:realm/src/dart/realmresults.dart';
 import 'package:realm/test/constants.dart';
 import 'package:realm/test/model/dog.dart';
 import 'package:realm/test/model/realmmodule.dart';
 import "package:test/test.dart";
+
+import 'dart:ffi';
+import 'dart:isolate';
+import 'package:realm/src/dart/ffi/dylib_utils.dart';
+
+// Lookup additional function for callback tests
+final dl = dlopenPlatformSpecific("realm-dart", path: "./lib/src/cpp/");
+
+// perform an addition in C and invoke a Dart callback from the same isolate (no need to use a ReceivePort)
+final addition_from_same_isolate = dl.lookupFunction<
+        Void Function(Int64 a, Int64 b,
+            Pointer<NativeFunction<Void Function(IntPtr)>> functionPointer),
+        void Function(int a, int b,
+            Pointer<NativeFunction<Void Function(IntPtr)>> functionPointer)>(
+    'addition_from_same_isolate');
+
+List<int> invoked;
+void additionCallback(int a) {
+  invoked[0] = a;
+}
+// start a pthread to perform an addition asynchrounously then invoke the main isolate (using a 'RecivePort') to deliver the result
+final async_pthread_addition = dl.lookupFunction<
+    Void Function(Int64 a, Int64 b, Int64 sendPort),
+    void Function(int a, int b, int sendPort)>('async_pthread_addition');
+
+final registerDart_PostCObject = dl.lookupFunction<
+    Void Function(
+        Pointer<NativeFunction<Int8 Function(Int64, Pointer<Dart_CObject>)>>
+            functionPointer),
+    void Function(
+        Pointer<NativeFunction<Int8 Function(Int64, Pointer<Dart_CObject>)>>
+            functionPointer)>('RegisterDart_PostCObject');
+
+Future asyncSleep(int ms) {
+  return new Future.delayed(Duration(milliseconds: ms));
+}
 
 void main() {
   group("Realm", () {
@@ -39,8 +76,8 @@ void main() {
     test("Persist Object", () async {
       await realm.beginTransaction();
       Dog dog = Dog()
-      ..age = 7
-      ..name = "Akamaru";
+        ..age = 7
+        ..name = "Akamaru";
 
       Dog managedDog = realm.create<Dog>(dog);
       await realm.commitTransaction();
@@ -48,7 +85,7 @@ void main() {
       expect(managedDog.name, "Akamaru");
       expect(managedDog.age, 7);
     });
-    
+
     test("Query Object", () async {
       await realm.beginTransaction();
       Dog dog = realm.create<Dog>();
@@ -86,7 +123,8 @@ void main() {
       dog2.name = "Charlie";
       await realm.commitTransaction();
 
-      List<Dog> dogs = await realm.objects<Dog>('name beginswith "Akam" or name contains[c] "lie" SORT(name DESCENDING)');
+      List<Dog> dogs = await realm.objects<Dog>(
+          'name beginswith "Akam" or name contains[c] "lie" SORT(name DESCENDING)');
       expect(dogs.length, 2);
       expect(dogs[0].name, "Akamaru");
       expect(dogs[1].name, "Charlie");
@@ -105,13 +143,14 @@ void main() {
       dog1.name = "Dog1";
       await realm.commitTransaction();
 
-      List<Dog> all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
+      List<Dog> all_dogs =
+          await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
       expect(all_dogs.length, 1);
       expect(all_dogs[0].mother, null);
 
       Dog dog2 = Dog()..name = "Dog2";
 
-     // setting a managed dog
+      // setting a managed dog
       await realm.beginTransaction();
       dog2 = realm.create(dog2);
       dog1.mother = dog2;
@@ -140,7 +179,8 @@ void main() {
       dog.name = "Akamaru";
       await realm.commitTransaction();
 
-      List<Dog> dogs = await realm.objects<Dog>('name = "Akamaru" SORT(name DESCENDING)');
+      List<Dog> dogs =
+          await realm.objects<Dog>('name = "Akamaru" SORT(name DESCENDING)');
       expect(dogs.length, 1);
       expect(dogs[0].name, "Akamaru");
       expect(dogs[0].others.length, 0);
@@ -157,7 +197,8 @@ void main() {
       expect(dogs[0].others.length, 2);
 
       dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
-      expect(dogs.length, 3); // unmanaged objects added to a list are now persisted
+      expect(dogs.length,
+          3); // unmanaged objects added to a list are now persisted
       expect(dogs[0].name, "Akamaru");
       expect(dogs[0].others.length, 2);
       expect(dogs[0].others[0].name, "Dog1");
@@ -186,7 +227,8 @@ void main() {
       await realm.commitTransaction();
 
       dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
-      expect(dogs.length, 3); // objects still exist, only the list has been modified
+      expect(dogs.length,
+          3); // objects still exist, only the list has been modified
       expect(dogs[0].name, "Akamaru");
       expect(dogs[0].others.length, 2);
       expect(dogs[0].others[0].name, "Dog1");
@@ -202,7 +244,8 @@ void main() {
       await realm.commitTransaction();
 
       dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
-      expect(dogs.length, 3); // objects still exist, only the list has been modified
+      expect(dogs.length,
+          3); // objects still exist, only the list has been modified
       expect(dogs[0].name, "Akamaru");
       expect(dogs[0].others.length, 0);
       expect(dogs[1].name, "Dog1");
@@ -217,7 +260,8 @@ void main() {
       dog1.name = "Dog1";
       await realm.commitTransaction();
 
-      List<Dog> all_dogs = await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
+      List<Dog> all_dogs =
+          await realm.objects<Dog>('TRUEPREDICATE SORT(name DESCENDING)');
       expect(all_dogs.length, 1);
       expect(all_dogs[0].mother, null);
       expect(all_dogs[0].litter.length, 0);
@@ -262,12 +306,36 @@ void main() {
       expect(all_dogs[1].litter[0].name, "Dog1");
 
       // queries know about linkingObjects
-      RealmResults<Dog> dogsWithChildren = await realm.objects<Dog>('litter.@count > 0');
+      RealmResults<Dog> dogsWithChildren =
+          await realm.objects<Dog>('litter.@count > 0');
       expect(dogsWithChildren.length, 1);
       expect(dogsWithChildren[0].name, "Dog2");
       expect(dogsWithChildren[0].litter.length, 1);
       expect(dogsWithChildren[0].litter[0].name, "Dog1");
     });
 
+    // This test demonstrates that you can invoke a Dart callback from C, as long as we're in the same Isolate
+    test("callback from C same Isolate", () async {
+      invoked = []..add(0);
+
+      final callback =
+          Pointer.fromFunction<Void Function(IntPtr)>(additionCallback);
+      addition_from_same_isolate(40, 2, callback);
+      expect(invoked[0], 42);
+    });
+
+    // This test demonstrates that you can invoke a callback from a pthread using ReceivePort
+    test("async callback from pthread", () async {
+      registerDart_PostCObject(NativeApi.postCObject);
+      bool callbackInvoked = false;
+      final resultsPort = ReceivePort()
+        ..listen((dynamic message) {
+          callbackInvoked = true;
+          expect(message as int, 42);
+        });
+      async_pthread_addition(40, 2, resultsPort.sendPort.nativePort);
+      await asyncSleep(500);
+      expect(callbackInvoked, true);
+    });
   });
 }

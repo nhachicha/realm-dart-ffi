@@ -12,6 +12,8 @@ add_compile_options("$<$<CONFIG:DEBUG>:-DREALM_DEBUG>")
 
 add_subdirectory(external/object-store)
 include_directories(external/object-store/external/json)
+include_directories(/Users/nabil/Dev/flutter/bin/cache/dart-sdk/include)
+
 
 add_library(realm-dart SHARED
   database.cpp

@@ -1,9 +1,9 @@
 import "dart:ffi";
 
-class Database extends Struct<Database> {}
+class DatabaseType extends Struct {}
 
-class RealmObject extends Struct<RealmObject> {}
+class RealmObjectType extends Struct {}
 
-class RealmResults extends Struct<RealmResults> {}
+class RealmResultsType extends Struct {}
 
-class RealmList extends Struct<RealmList> {}
+class RealmListType extends Struct {}
