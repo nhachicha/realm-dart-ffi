@@ -1,7 +1,7 @@
 
-import 'package:realm/src/dart/realmlist.dart';
-import 'package:realm/src/dart/realmmodel.dart';
-import 'package:realm/src/dart/realmresults.dart';
+import 'package:realm/src/dart/realm_list.dart';
+import 'package:realm/src/dart/realm_model.dart';
+import 'package:realm/src/dart/realm_results.dart';
 import "package:ffi/ffi.dart";
 part 'dog.g.dart'; 
 

@@ -1,10 +1,10 @@
-// import 'package:realm/src/dart/realmconfiguration.dart';
-// import 'package:realm/src/dart/realmmodel.dart';
+// import 'package:realm/src/dart/realm_configuration.dart';
+// import 'package:realm/src/dart/realm_model.dart';
 
 // import "../lib/src/dart/realm.dart";
 // import 'model/dog.dart';
 // import 'model/person.dart';
-// import 'model/realmmodule.dart';
+// import 'model/realm_module.dart';
 
 // void main() async {
 //   var realm = await Realm()

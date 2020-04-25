@@ -1,8 +1,9 @@
 import 'dart:collection';
+import 'dart:ffi';
 import 'package:realm/src/dart/bindings/bindings.dart';
 import 'package:realm/src/dart/bindings/types.dart';
 import 'package:realm/src/dart/realm.dart';
-import 'package:realm/src/dart/realmmodel.dart';
+import 'package:realm/src/dart/realm_model.dart';
 import 'package:realm/test/model/dog.dart';
 import "package:ffi/ffi.dart";
 import 'dart:ffi';
@@ -65,7 +66,7 @@ import 'dart:ffi';
     free(tableNameC);
 
     // T proxyInstance = realmConfiguration.newProxyInstance<T>(T); TODO use this 
-    Dog$Realm dog = new Dog$Realm();
+    Dog$Realm dog = Dog$Realm();
     dog.objectPointer = realmObjectPointer;
 
     return dog as T;
@@ -91,7 +92,7 @@ import 'dart:ffi';
   }
 
   @override
-  void set length(int newLength) {
+  set length(int newLength) {
     throw Exception("Modifying length is not supported"); // Realm list items cannot be null
     
   }

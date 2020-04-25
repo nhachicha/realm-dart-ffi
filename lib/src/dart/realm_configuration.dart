@@ -1,8 +1,8 @@
-// import 'package:realm/src/dart/realmmodel.dart';
+// import 'package:realm/src/dart/realm_model.dart';
 
-import 'package:realm/src/dart/realmresults.dart';
+import 'package:realm/src/dart/realm_results.dart';
 
-import 'realmmodel.dart';
+import 'realm_model.dart';
 
 abstract class RealmConfiguration {
   // String _path;
@@ -14,7 +14,7 @@ abstract class RealmConfiguration {
   List<RealmModel> schema();
   
   String getSchemaAsJSON() {
-    var jsonSchema = new StringBuffer();
+    var jsonSchema = StringBuffer();
     jsonSchema.write("[\n");
     for (var s in schema()) {
       RealmModel model = newProxyInstance(s.runtimeType);

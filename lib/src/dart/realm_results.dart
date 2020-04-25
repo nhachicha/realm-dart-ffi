@@ -1,11 +1,11 @@
 import 'dart:collection';
+import 'dart:ffi';
 import 'package:realm/src/dart/bindings/bindings.dart';
 import 'package:realm/src/dart/bindings/types.dart' as types;
-import 'package:realm/src/dart/realmmodel.dart';
+import 'package:realm/src/dart/realm_model.dart';
 import 'package:realm/test/model/dog.dart';
 import 'database.dart';
 import "package:ffi/ffi.dart";
-import 'dart:ffi';
 
  class RealmResults<T extends RealmModel> extends ListBase<T> {
   //final RealmReusltsPointer _nativePointer to be passed with ctor
@@ -32,7 +32,7 @@ import 'dart:ffi';
     free(tableNameC);
 
     // T proxyInstance = realmConfiguration.newProxyInstance<T>(T); TODO use this 
-    Dog$Realm dog = new Dog$Realm();
+    Dog$Realm dog = Dog$Realm();
     dog.objectPointer = realmObjectPointer;
     dog.realm = realm;
     return dog as T;
@@ -44,7 +44,7 @@ import 'dart:ffi';
   }
 
   @override
-  void set length(int newLength) {
+  set length(int newLength) {
     throw Exception("Modifying a RealmResults is not supported");
   }
 }

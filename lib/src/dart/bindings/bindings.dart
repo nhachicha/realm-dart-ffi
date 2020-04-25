@@ -1,4 +1,4 @@
-import "dart:ffi";
+import 'dart:ffi';
 
 import 'package:realm/src/dart/ffi/dylib_utils.dart';
 

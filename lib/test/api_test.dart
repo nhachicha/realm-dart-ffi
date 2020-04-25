@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:realm/src/dart/bindings/bindings.dart';
 import 'package:realm/src/dart/realm.dart';
-import 'package:realm/src/dart/realmresults.dart';
+import 'package:realm/src/dart/realm_results.dart';
 import 'package:realm/test/constants.dart';
 import 'package:realm/test/model/dog.dart';
-import 'package:realm/test/model/realmmodule.dart';
-import "package:test/test.dart";
+import 'package:realm/test/model/realm_module.dart';
+import 'package:test/test.dart';
 
 import 'dart:ffi';
 import 'dart:isolate';
@@ -48,13 +48,13 @@ void main() {
   group("Realm", () {
     Realm realm;
     setUp(() async {
-      final test_dir = Directory(realm_test_directory);
+      final testDir = Directory(realmTestDirectory);
 
-      if (test_dir.existsSync()) {
-        test_dir.deleteSync(recursive: true);
+      if (testDir.existsSync()) {
+        testDir.deleteSync(recursive: true);
       }
 
-      test_dir.createSync();
+      testDir.createSync();
       return realm = await Realm()
         ..realmConfiguration = RealmModuleGenerated()
         ..open();

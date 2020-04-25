@@ -1,9 +1,9 @@
 import 'dart:ffi';
 
 import 'package:realm/src/dart/bindings/types.dart' as types;
-import 'package:realm/src/dart/realmmodel.dart';
-import 'package:realm/src/dart/realmconfiguration.dart';
-import 'package:realm/src/dart/realmresults.dart';
+import 'package:realm/src/dart/realm_model.dart';
+import 'package:realm/src/dart/realm_configuration.dart';
+import 'package:realm/src/dart/realm_results.dart';
 import 'package:realm/src/dart/bindings/bindings.dart';
 import "package:ffi/ffi.dart";
 
