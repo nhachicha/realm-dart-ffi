@@ -12,16 +12,16 @@ abstract class RealmConfiguration {
   String path();
 
   List<RealmModel> schema();
-  
+
   String getSchemaAsJSON() {
     var jsonSchema = StringBuffer();
-    jsonSchema.write("[\n");
+    jsonSchema.write('[\n');
     for (var s in schema()) {
-      RealmModel model = newProxyInstance(s.runtimeType);
+      var model = newProxyInstance(s.runtimeType);
       jsonSchema.write(model.schemaToJson);
-      jsonSchema.write(",");
+      jsonSchema.write(',');
     }
-    jsonSchema.write("]\n");
+    jsonSchema.write(']\n');
     // return jsonSchema.toString();
     return '''
     [
@@ -105,11 +105,11 @@ abstract class RealmConfiguration {
   // will return the code generated instance of the given class
   T newProxyInstance<T extends RealmModel>(Type type) {
     throw Exception(
-        "This should not be invoked as is, only overrided by code generated instance that extends RealmConfiguration");
+        'This should not be invoked as is, only overrided by code generated instance that extends RealmConfiguration');
   } //THIS will be implemented by the generated RealmConfiguration instance
 
   RealmResults<T> newRealmResultsInstance<T extends RealmModel>(Type type) {
     throw Exception(
-        "This should not be invoked as is, only overrided by code generated instance that extends RealmConfiguration");
+        'This should not be invoked as is, only overrided by code generated instance that extends RealmConfiguration');
   }
 }

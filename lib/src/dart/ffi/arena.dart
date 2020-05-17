@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:ffi';
+import 'package:ffi/ffi.dart';
 
 /// [Arena] manages allocated C memory.
 ///
@@ -11,7 +12,7 @@ import 'dart:ffi';
 class Arena {
   Arena();
 
-  List<Pointer<Void>> _allocations = [];
+  final List<Pointer<Void>> _allocations = [];
 
   /// Bound the lifetime of [ptr] to this [Arena].
   T scoped<T extends Pointer>(T ptr) {
@@ -22,7 +23,7 @@ class Arena {
   /// Frees all memory pointed to by [Pointer]s in this arena.
   void finalize() {
     for (final ptr in _allocations) {
-      ptr.free();
+      free(ptr);
     }
   }
 
@@ -39,14 +40,14 @@ class RethrownError {
   dynamic original;
   StackTrace originalStackTrace;
   RethrownError(this.original, this.originalStackTrace);
-  toString() => """RethrownError(${original})
-${originalStackTrace}""";
+  @override
+  String toString() => 'RethrownError(${original}) ${originalStackTrace}';
 }
 
 /// Runs the [body] in an [Arena] freeing all memory which is [scoped] during
 /// execution of [body] at the end of the execution.
 R runArena<R>(R Function(Arena) body) {
-  Arena arena = Arena();
+  var arena = Arena();
   try {
     return runZoned(() => body(arena),
         zoneValues: {#_currentArena: arena},

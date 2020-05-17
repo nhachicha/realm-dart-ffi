@@ -3,4 +3,4 @@
 /// Written using dart:ffi.
 library realm;
 
-export "database.dart";
+export 'database.dart';

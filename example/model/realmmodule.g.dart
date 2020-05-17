@@ -1,7 +1,5 @@
-
 // //@RealmModule
 // part of 'realm_module.dart';
-
 
 // class RealmModuleGenerated extends RealmModule {
 //   static final RealmConfiguration _singleton = new RealmModuleGenerated._internal();

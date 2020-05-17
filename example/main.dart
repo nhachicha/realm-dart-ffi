@@ -10,7 +10,7 @@
 //   var realm = await Realm()
 //   ..realmConfiguration = RealmModuleGenerated()
 //   ..open();
-  
+
 //   Dog dog = Dog();
 //   dog.name = "Akamaru";
 //   await realm.beginTransaction();// TODO use then?

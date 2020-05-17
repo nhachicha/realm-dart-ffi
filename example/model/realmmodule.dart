@@ -5,11 +5,11 @@
 // import 'dog.dart';
 // import 'person.dart';
 
-// part 'realm_module.g.dart'; 
+// part 'realm_module.g.dart';
 
 // // @RealmSchema("/Users/Nabil/Dev/realm/realm-dart-ffi/test.realm" , [Dog, Person])//TODO this might be a bug reproduce in an isolated example then create an issue
 // // class RealmModule {
-  
+
 // // }
 
 // // @RealmSchema

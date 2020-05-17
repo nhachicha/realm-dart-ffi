@@ -1,9 +1,9 @@
-
+import 'package:ffi/ffi.dart';
 import 'package:realm/src/dart/realm_list.dart';
 import 'package:realm/src/dart/realm_model.dart';
 import 'package:realm/src/dart/realm_results.dart';
-import "package:ffi/ffi.dart";
-part 'dog.g.dart'; 
+
+part 'dog.g.dart';
 
 class Dog extends RealmModel {
   String name;

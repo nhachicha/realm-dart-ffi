@@ -1,8 +1,6 @@
-
 import 'dart:ffi';
 import 'package:realm/src/dart/bindings/types.dart' as types;
 import 'package:realm/src/dart/database.dart';
-
 
 export 'dart:ffi';
 export 'package:realm/src/dart/bindings/bindings.dart';
@@ -15,5 +13,5 @@ class RealmModel {
   String tableName;
   String schemaToJson;
 
-  void persist<T extends RealmModel>(T obj) {}  
+  void persist<T extends RealmModel>(T obj) {}
 }
