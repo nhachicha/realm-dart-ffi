@@ -1,3 +1,5 @@
+# _This repo is archived, please follow progress on https://github.com/blagoev/realm-dart for a preview release soon._
+
 # realm-dart-ffi
 Experimental Realm binding using `dart:ffi` [preview support](https://github.com/dart-lang/sdk/issues/34452#issuecomment-482136759). 
 
